@@ -1,7 +1,5 @@
 package graphql.query;
-
 import com.google.gson.Gson;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,15 +20,18 @@ public class GraphQLQuery {
     }
 
     public String getQuery(int fromStop, int toStop) {
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
         String graphQLQuery = String.format("""
                   {
                   trip(
                     from: {place:"NSR:StopPlace:%d"}
                     to: {place:"NSR:StopPlace:%d"}
+                    dateTime: "%s"
                   ) {
                     tripPatterns {
-                      expectedStartTime
-                      expectedEndTime
+                      aimedStartTime
+                      aimedEndTime
                       duration
                       legs {
                         mode
@@ -46,11 +47,12 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop);
+                """, fromStop, toStop, dateString);
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime) {
+        String dateString = dateTime.toString();
         String graphQLQuery = String.format("""
                   {
                   trip(
@@ -59,8 +61,8 @@ public class GraphQLQuery {
                     dateTime: "%s"
                   ) {
                      tripPatterns {
-                       expectedStartTime
-                       expectedEndTime
+                       aimedStartTime
+                       aimedEndTime
                        duration
                        legs {
                          mode
@@ -76,21 +78,24 @@ public class GraphQLQuery {
                      }
                    }
                  }
-                """, fromStop, toStop, dateTime);
+                """, fromStop, toStop, dateString);
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, String transportMode) {
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
         String graphQLQuery = String.format("""
                 {
                   trip(
                     from: {place: "NSR:StopPlace:%d"}
                     to: {place: "NSR:StopPlace:%d"}
+                    dateTime: "%s"
                     modes: {transportModes: {%s}}
                   ) {
                     tripPatterns {
-                      expectedStartTime
-                      expectedEndTime
+                      aimedEndTime
+                      aimedEndTime
                       duration
                       legs {
                         mode
@@ -106,26 +111,24 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, transportMode);
+                """, fromStop, toStop, dateString, transportMode);
 
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, String transportMode) {
         String timeString = dateTime.toString();
-
         String graphQLQuery = String.format("""
                 {
                   trip(
                     from: {place: "NSR:StopPlace:%d"}
                     to: {place: "NSR:StopPlace:%d"}
                     dateTime: "%s"
-                    arriveBy: false
                     modes: {transportModes: {transportMode: %s}}
                   ) {
                     tripPatterns {
-                      expectedStartTime
-                      expectedEndTime
+                      aimedEndTime
+                      aimedEndTime
                       duration
                       legs {
                         mode
@@ -147,54 +150,21 @@ public class GraphQLQuery {
     }
 
     public String getQuery(int fromStop, int toStop, ArrayList<String> transportModes) {
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
+
         String tModes = String.join("}, {transportMode: ", transportModes);
-
-        String graphQLQuery = String.format("""
-                {
-                  trip(
-                    from: {place: "NSR:StopPlace:%s"}
-                    to: {place: "NSR:StopPlace:%s"}
-                    arriveBy: false
-                    modes: {transportModes: [{transportMode: %s}]}
-                  ) {
-                    tripPatterns {
-                      expectedStartTime
-                      expectedEndTime
-                      duration
-                      legs {
-                        mode
-                        distance
-                        line {
-                          publicCode
-                          transportMode
-                          operator {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-                """, fromStop, toStop, tModes);
-
-        return returnJsonQuery(graphQLQuery);
-    }
-
-    public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, ArrayList<String> transportModes) {
-        String tModes = String.join("}, {transportMode: ", transportModes);
-
         String graphQLQuery = String.format("""
                 {
                   trip(
                     from: {place: "NSR:StopPlace:%s"}
                     to: {place: "NSR:StopPlace:%s"}
                     dateTime: "%s"
-                    arriveBy: false
                     modes: {transportModes: [{transportMode: %s}]}
                   ) {
                     tripPatterns {
-                      expectedStartTime
-                      expectedEndTime
+                      aimedEndTime
+                      aimedEndTime
                       duration
                       legs {
                         mode
@@ -210,7 +180,42 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateTime, tModes);
+                """, fromStop, toStop, dateString, tModes);
+
+        return returnJsonQuery(graphQLQuery);
+    }
+
+    public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, ArrayList<String> transportModes) {
+        String dateString = dateTime.toString();
+
+        String tModes = String.join("}, {transportMode: ", transportModes);
+        String graphQLQuery = String.format("""
+                {
+                  trip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    dateTime: "%s"
+                    modes: {transportModes: [{transportMode: %s}]}
+                  ) {
+                    tripPatterns {
+                      aimedEndTime
+                      aimedEndTime
+                      duration
+                      legs {
+                        mode
+                        distance
+                        line {
+                          publicCode
+                          transportMode
+                          operator {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, tModes);
 
         return returnJsonQuery(graphQLQuery);
     }
