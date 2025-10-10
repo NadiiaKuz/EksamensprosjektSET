@@ -34,9 +34,9 @@ public class GraphQLQuery {
                       aimedEndTime
                       duration
                       legs {
-                        mode
                         distance
                         line {
+                          name
                           publicCode
                           transportMode
                           operator {
@@ -44,6 +44,16 @@ public class GraphQLQuery {
                           }
                         }
                       }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
                     }
                   }
                 }
@@ -60,24 +70,34 @@ public class GraphQLQuery {
                     to: {place:"NSR:StopPlace:%d"}
                     dateTime: "%s"
                   ) {
-                     tripPatterns {
-                       aimedStartTime
-                       aimedEndTime
-                       duration
-                       legs {
-                         mode
-                         distance
-                         line {
-                           publicCode
-                           transportMode
-                           operator {
-                             id
-                           }
-                         }
-                       }
-                     }
-                   }
-                 }
+                    tripPatterns {
+                      aimedStartTime
+                      aimedEndTime
+                      duration
+                      legs {
+                        distance
+                        line {
+                          name
+                          publicCode
+                          transportMode
+                          operator {
+                            id
+                          }
+                        }
+                      }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                  }
+                }
                 """, fromStop, toStop, dateString);
         return returnJsonQuery(graphQLQuery);
     }
@@ -94,13 +114,13 @@ public class GraphQLQuery {
                     modes: {transportModes: {%s}}
                   ) {
                     tripPatterns {
-                      aimedEndTime
+                      aimedStartTime
                       aimedEndTime
                       duration
                       legs {
-                        mode
                         distance
                         line {
+                          name
                           publicCode
                           transportMode
                           operator {
@@ -108,6 +128,16 @@ public class GraphQLQuery {
                           }
                         }
                       }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
                     }
                   }
                 }
@@ -127,13 +157,13 @@ public class GraphQLQuery {
                     modes: {transportModes: {transportMode: %s}}
                   ) {
                     tripPatterns {
-                      aimedEndTime
+                      aimedStartTime
                       aimedEndTime
                       duration
                       legs {
-                        mode
                         distance
                         line {
+                          name
                           publicCode
                           transportMode
                           operator {
@@ -141,6 +171,16 @@ public class GraphQLQuery {
                           }
                         }
                       }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
                     }
                   }
                 }
@@ -163,13 +203,13 @@ public class GraphQLQuery {
                     modes: {transportModes: [{transportMode: %s}]}
                   ) {
                     tripPatterns {
-                      aimedEndTime
+                      aimedStartTime
                       aimedEndTime
                       duration
                       legs {
-                        mode
                         distance
                         line {
+                          name
                           publicCode
                           transportMode
                           operator {
@@ -177,6 +217,16 @@ public class GraphQLQuery {
                           }
                         }
                       }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
                     }
                   }
                 }
@@ -198,13 +248,13 @@ public class GraphQLQuery {
                     modes: {transportModes: [{transportMode: %s}]}
                   ) {
                     tripPatterns {
-                      aimedEndTime
+                      aimedStartTime
                       aimedEndTime
                       duration
                       legs {
-                        mode
                         distance
                         line {
+                          name
                           publicCode
                           transportMode
                           operator {
@@ -212,6 +262,16 @@ public class GraphQLQuery {
                           }
                         }
                       }
+                    }
+                    fromPlace {
+                      name
+                      longitude
+                      latitude
+                    }
+                    toPlace {
+                      name
+                      longitude
+                      latitude
                     }
                   }
                 }
