@@ -2,17 +2,27 @@
 <html lang="nb">
 <head>
     <meta charset="UTF-8">
+    <title>Forside</title>
+    <link rel="stylesheet" href="/css/style.css">
     <script src="/webjars/vue/3.4.34/dist/vue.global.prod.js"></script>
     <script>
         const app = Vue.createApp({});
     </script>
+
     @componentRegistration
-    <title>Forside</title>
+
 </head>
 <body>
-    <main id="main-vue" v-cloak>
-        @routeComponent
-    </main>
+    <div id="container">
+        <header>
+            <a id="logo" href="/vue/view/search-page.vue"><img src="/images/logo.png" alt="logo"/></a>
+            <p>- Reise gjort enkelt</p>
+            <a id="account" href="#"><i class="fa-solid fa-user"></i></a>
+        </header>
+        <main id="main-vue" v-cloak>
+            @routeComponent
+        </main>
+    </div>
 <script>
     app.mount("#main-vue");
 </script>
