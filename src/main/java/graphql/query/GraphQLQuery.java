@@ -279,4 +279,331 @@ public class GraphQLQuery {
 
         return returnJsonQuery(graphQLQuery);
     }
+
+    // alt herfra blir "viaTrip" queries, altså en rute med et planlagt byttepunkt
+
+    public String getQuery(int fromStop, int toStop, int viaStop) {
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop);
+
+        return returnJsonQuery(query);
+    }
+
+    public String getQuery(int fromStop, int toStop, int viaStop, OffsetDateTime dateTime) {
+        String dateString = dateTime.toString();
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop);
+
+        return returnJsonQuery(query);
+    }
+
+    public String getQuery(int fromStop, int toStop, int viaStop, String transportMode) {
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]},
+                    {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop, transportMode, transportMode);
+
+        return returnJsonQuery(query);
+    }
+
+    public String getQuery(int fromStop, int toStop, int viaStop,
+                           OffsetDateTime dateTime, String transportMode) {
+
+        String dateString = dateTime.toString();
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]},
+                    {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop, transportMode, transportMode);
+
+        return returnJsonQuery(query);
+    }
+
+    public String getQuery(int fromStop, int toStop, int viaStop,
+                           ArrayList<String> transportModes) {
+
+        OffsetDateTime dateTime = OffsetDateTime.now();
+        String dateString = dateTime.toString();
+
+        String tModes = String.join("}, {transportMode: ", transportModes);
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}, {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop, tModes, tModes);
+
+        return returnJsonQuery(query);
+    }
+
+    public String getQuery(int fromStop, int toStop, int viaStop,
+                           OffsetDateTime dateTime, ArrayList<String> transportModes) {
+
+        String dateString = dateTime.toString();
+
+        String tModes = String.join("}, {transportMode: ", transportModes);
+        String query = String.format("""
+                {
+                  viaTrip(
+                    from: {place: "NSR:StopPlace:%s"}
+                    to: {place: "NSR:StopPlace:%s"}
+                    searchWindow: "PT2H"
+                    dateTime: "%s"
+                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
+                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}, {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
+                  ) {
+                    routingErrors {
+                      description
+                      inputField
+                      code
+                    }
+                    tripPatternsPerSegment {
+                      tripPatterns {
+                        aimedStartTime
+                        aimedEndTime
+                        duration
+                        legs {
+                          distance
+                          line {
+                            name
+                            publicCode
+                            transportMode
+                            operator {
+                              id
+                            }
+                          }
+                          fromPlace {
+                            name
+                          }
+                          toPlace {
+                            name
+                          }
+                        }
+                      }
+                    }
+                    tripPatternCombinations {
+                      from
+                      to
+                    }
+                  }
+                }
+                """, fromStop, toStop, dateString, viaStop, tModes, tModes);
+
+        return returnJsonQuery(query);
+    }
 }
