@@ -21,7 +21,7 @@ public class GraphQLQuery {
 
     public String getQuery(int fromStop, int toStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String graphQLQuery = String.format("""
                   {
                   trip(
@@ -57,12 +57,12 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString);
+                """, fromStop, toStop, dateTimeString);
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime) {
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String graphQLQuery = String.format("""
                   {
                   trip(
@@ -98,13 +98,13 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString);
+                """, fromStop, toStop, dateTimeString);
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, String transportMode) {
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String graphQLQuery = String.format("""
                 {
                   trip(
@@ -141,13 +141,13 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, transportMode);
+                """, fromStop, toStop, dateTimeString, transportMode);
 
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, String transportMode) {
-        String timeString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String graphQLQuery = String.format("""
                 {
                   trip(
@@ -184,16 +184,16 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, timeString, transportMode);
+                """, fromStop, toStop, dateTimeString, transportMode);
 
         return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, ArrayList<String> transportModes) {
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
-
+        String dateTimeString = dateTime.toString();
         String tModes = String.join("}, {transportMode: ", transportModes);
+
         String graphQLQuery = String.format("""
                 {
                   trip(
@@ -230,14 +230,15 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, tModes);
+                """, fromStop, toStop, dateTimeString, tModes);
 
         return returnJsonQuery(graphQLQuery);
     }
 
-    public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, ArrayList<String> transportModes) {
-        String dateString = dateTime.toString();
+    public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime,
+                           ArrayList<String> transportModes) {
 
+        String dateTimeString = dateTime.toString();
         String tModes = String.join("}, {transportMode: ", transportModes);
         String graphQLQuery = String.format("""
                 {
@@ -275,7 +276,7 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, tModes);
+                """, fromStop, toStop, dateTimeString, tModes);
 
         return returnJsonQuery(graphQLQuery);
     }
@@ -284,7 +285,7 @@ public class GraphQLQuery {
 
     public String getQuery(int fromStop, int toStop, int viaStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String query = String.format("""
                 {
                   viaTrip(
@@ -329,13 +330,13 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop);
+                """, fromStop, toStop, dateTimeString, viaStop);
 
         return returnJsonQuery(query);
     }
 
     public String getQuery(int fromStop, int toStop, int viaStop, OffsetDateTime dateTime) {
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String query = String.format("""
                 {
                   viaTrip(
@@ -380,14 +381,14 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop);
+                """, fromStop, toStop, dateTimeString, viaStop);
 
         return returnJsonQuery(query);
     }
 
     public String getQuery(int fromStop, int toStop, int viaStop, String transportMode) {
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String query = String.format("""
                 {
                   viaTrip(
@@ -434,7 +435,7 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop, transportMode, transportMode);
+                """, fromStop, toStop, dateTimeString, viaStop, transportMode, transportMode);
 
         return returnJsonQuery(query);
     }
@@ -442,7 +443,7 @@ public class GraphQLQuery {
     public String getQuery(int fromStop, int toStop, int viaStop,
                            OffsetDateTime dateTime, String transportMode) {
 
-        String dateString = dateTime.toString();
+        String dateTimeString = dateTime.toString();
         String query = String.format("""
                 {
                   viaTrip(
@@ -489,7 +490,7 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop, transportMode, transportMode);
+                """, fromStop, toStop, dateTimeString, viaStop, transportMode, transportMode);
 
         return returnJsonQuery(query);
     }
@@ -498,9 +499,9 @@ public class GraphQLQuery {
                            ArrayList<String> transportModes) {
 
         OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateString = dateTime.toString();
-
+        String dateTimeString = dateTime.toString();
         String tModes = String.join("}, {transportMode: ", transportModes);
+
         String query = String.format("""
                 {
                   viaTrip(
@@ -546,7 +547,7 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop, tModes, tModes);
+                """, fromStop, toStop, dateTimeString, viaStop, tModes, tModes);
 
         return returnJsonQuery(query);
     }
@@ -554,8 +555,7 @@ public class GraphQLQuery {
     public String getQuery(int fromStop, int toStop, int viaStop,
                            OffsetDateTime dateTime, ArrayList<String> transportModes) {
 
-        String dateString = dateTime.toString();
-
+        String dateTimeString = dateTime.toString();
         String tModes = String.join("}, {transportMode: ", transportModes);
         String query = String.format("""
                 {
@@ -602,7 +602,7 @@ public class GraphQLQuery {
                     }
                   }
                 }
-                """, fromStop, toStop, dateString, viaStop, tModes, tModes);
+                """, fromStop, toStop, dateTimeString, viaStop, tModes, tModes);
 
         return returnJsonQuery(query);
     }
