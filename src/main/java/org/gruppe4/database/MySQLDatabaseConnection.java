@@ -6,12 +6,6 @@ import java.sql.SQLException;
 
 public class MySQLDatabaseConnection {
 
-    /*
-    private static final String URL = "";
-    private static final String USER = "";
-    private static final String Password = "";
-    */
-
     private String url;
     private String username;
     private String password;
