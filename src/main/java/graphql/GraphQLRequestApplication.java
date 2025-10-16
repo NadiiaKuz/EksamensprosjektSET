@@ -2,6 +2,7 @@ package graphql;
 
 import graphql.client.GraphQLClient;
 import graphql.query.GraphQLQuery;
+import org.gruppe4.enums.TransportType;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -14,13 +15,17 @@ public class GraphQLRequestApplication {
         // Lager automatiserte forespørsler senere når vi får brukerinput fra nettsiden
         // Lager klasse for å oversette navn på busstopper til ID senere
 
-        // Eksempel query
+        // Eksempel viaTrip query
+        TransportType buss = TransportType.BUS; // enum
+        TransportType tog = TransportType.RAIL; // enum
 
-        OffsetDateTime customTime = OffsetDateTime.parse("2025-10-02T16:00:00.218+02:00");
+        OffsetDateTime customTime = OffsetDateTime.parse("2025-10-15T16:00:00.218+02:00");
         ArrayList<String> transportModes = new ArrayList<>();
-        transportModes.add("bus");
-        transportModes.add("rail");     // Stop ID 60053: Halden stasjon, stop ID 58794: Fredrikstad stasjon
-        String response = client.sendGraphQLRequest(query.getQuery(60053, 58794, customTime, transportModes));
+        transportModes.add(buss.getMode()); // bruker BUS enum
+        transportModes.add(tog.getMode()); // bruker RAIL enum
+
+        // Stop ID 60053: Halden stasjon, stop ID 58794: Fredrikstad stasjon
+        String response = client.sendGraphQLRequest(query.getQuery(60045, 59872, 62339, customTime, transportModes));
 
         System.out.println(response);
     }
