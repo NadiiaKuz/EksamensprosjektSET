@@ -1,7 +1,7 @@
 import io.javalin.Javalin;
 import io.javalin.vue.VueComponent;
 
-//For å få tilgang til bildefiler:
+//For å få tilgang til static-filer:
 import io.javalin.http.staticfiles.Location;
 
 public class Application {
