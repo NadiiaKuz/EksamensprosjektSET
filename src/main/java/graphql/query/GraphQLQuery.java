@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GraphQLQuery {
+    QueryObject queryObject;
+    
+    public GraphQLQuery(QueryObject queryObject) {
+        this.queryObject = queryObject;
+    }
 
     private String returnJsonQuery(String query) {
         // Create a map to hold the query
@@ -58,6 +63,7 @@ public class GraphQLQuery {
                   }
                 }
                 """, fromStop, toStop, dateTimeString);
+
         return returnJsonQuery(graphQLQuery);
     }
 
@@ -99,6 +105,7 @@ public class GraphQLQuery {
                   }
                 }
                 """, fromStop, toStop, dateTimeString);
+
         return returnJsonQuery(graphQLQuery);
     }
 
