@@ -44,8 +44,8 @@ public class TestEnturResponseService {
         TripPattern tripPattern = response.data.trip.tripPatterns.get(0);
 
         System.out.println("Trip route successfully received from Entur");
-        System.out.println("Aimed time: " + tripPattern.aimedStartTime);
-        System.out.println("Aimed time: " + tripPattern.aimedEndTime);
+        System.out.println("Aimed StartTime: " + tripPattern.aimedStartTime);
+        System.out.println("Aimed EndTime: " + tripPattern.aimedEndTime);
         System.out.println("Duration: " + tripPattern.duration);
         System.out.println("Total legs: " + tripPattern.legs.size());
 
