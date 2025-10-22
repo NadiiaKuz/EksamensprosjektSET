@@ -49,6 +49,7 @@
             <groupId>org.webjars.npm</groupId>
             <artifactId>vue</artifactId>
             <version>3.4.34</version>
+        </dependency>
 
         <!-- For databasekobling-->
         <dependency>
