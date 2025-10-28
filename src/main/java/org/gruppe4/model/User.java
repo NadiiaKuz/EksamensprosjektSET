@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public class User {
     private int userId;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String mail;
     private String password;
     private UserType userType;
@@ -15,14 +16,24 @@ public class User {
     private ArrayList<Route> favoriteRoute;
     private Ticket ticket;
 
-    public User(int userId, String name, String mail, String password, UserType userType, Role role) {
+    public User(int userId, String firstName, String lastName, String mail, String password, UserType userType, Role role) {
         this.userId = userId;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.mail = mail;
         this.password = password;
         this.userType = userType;
         this.role = role;
         this.favoriteRoute = new ArrayList<>();
+    }
+
+    public User(String firstName, String lastName, String mail, String password, UserType userType, Role role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mail = mail;
+        this.password = password;
+        this.userType = userType;
+        this.role = role;
     }
 
     /**
@@ -41,12 +52,20 @@ public class User {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getMail() {
@@ -95,5 +114,9 @@ public class User {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    public String getFullName(){
+        return this.firstName + " " + this.lastName;
     }
 }

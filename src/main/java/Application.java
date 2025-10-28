@@ -54,7 +54,7 @@ public class Application {
         UsersController usersController = new UsersController(usersService);
 
         // Oppsett av Users API-ruter
-        app.get("/api/users/{name}", context -> usersController.getUserByName(context));
+        app.get("/api/users/{email}", context -> usersController.getUserByEmail(context));
         app.post("/api/users", context -> usersController.createUser(context));
 
         app.get("/", new VueComponent("search-page"));

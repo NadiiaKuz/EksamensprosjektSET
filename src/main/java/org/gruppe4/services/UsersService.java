@@ -11,7 +11,17 @@ public class UsersService {
         this.usersRepository = usersRepository;
     }
 
-    public User getUserByName(String userName) {
-        return usersRepository.getUserByName(userName);
+    public User getUserByEmail(String userEmail) {
+        return usersRepository.getUserByEmail(userEmail);
+    }
+
+    public void createUser(User newUser) {
+        User databaseUser = usersRepository.getUserByEmail(newUser.getMail());
+
+        if (databaseUser != null){
+            throw new RuntimeException("User exists with email " + newUser.getMail());
+        }
+
+        usersRepository.createUser(newUser);
     }
 }
