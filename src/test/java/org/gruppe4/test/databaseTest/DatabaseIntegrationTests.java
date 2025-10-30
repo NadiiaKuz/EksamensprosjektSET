@@ -1,5 +1,6 @@
 package org.gruppe4.test.databaseTest;
 
+import org.gruppe4.test.databaseTest.testDB.MySQLDatabaseConnectionTest;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -142,5 +143,66 @@ public class DatabaseIntegrationTests {
 
         assertTrue(userCount > 0, "The users table has no rows");
         assertTrue(userCount < 4, "The users table has not been cleanly recreated");
+    }
+
+    @Test
+    public void testGetUserType() throws Exception {
+        String userType = testDB.getUserType(4);
+        assertNotNull(userType);
+        System.out.println("User Type: " + userType);
+    }
+
+    @Test
+    public void testGetUserTypeInvalidId() {
+        Exception exception =
+                assertThrows(Exception.class,
+                        () -> testDB.getUserType(-1));
+        String expectedMessage = "No userType found";
+        String actualMessage = exception.getMessage();
+        System.out.println(actualMessage);
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    //Sjekker at enum restriksjonen for UserType fungerer
+    @Test
+    public void testInsertInvalidUserType(){
+        Exception exception
+                = assertThrows(Exception.class, () ->
+                testDB.insertIntoUserTypes("MILITARY"));
+        String expectedMessage = "No enum constant org.gruppe4.enums.UserType.MILITARY";
+        String actualMessage = exception.getMessage();
+        System.out.println(actualMessage);
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testGetRoleType() throws Exception {
+        String roleType = testDB.getRoleType(2);
+        assertNotNull(roleType);
+        System.out.println("Role Type: " + roleType);
+    }
+
+    //Sjekker hvordan getRoleType håndterer feil idRole i parameteren
+    @Test
+    public void testGetRoleTypeInvalidId() {
+        Exception exception =
+                assertThrows(Exception.class,
+                        () -> testDB.getRoleType(5000));
+        String expectedMessage = "No roleType found";
+        String actualMessage = exception.getMessage();
+        System.out.println(actualMessage);
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    //Sjekker at enum restriksjonen for Roles fungerer
+    @Test
+    public void testInsertInvalidRoleType(){
+        Exception exception =
+                assertThrows(Exception.class,
+                        () -> testDB.insertIntoRoles("DEVELOPER"));
+        String expectedMessage = "No enum constant org.gruppe4.enums.Role.DEVELOPER";
+        String actualMessage = exception.getMessage();
+        System.out.println(actualMessage);
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }

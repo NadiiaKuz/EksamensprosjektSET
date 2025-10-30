@@ -1,7 +1,6 @@
-package org.gruppe4.test.databaseTest;
+package org.gruppe4.test.databaseTest.testDB;
 
 import org.gruppe4.database.MySQLDatabaseConnection;
-import org.gruppe4.test.databaseTest.testDB.TestDatabase;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;

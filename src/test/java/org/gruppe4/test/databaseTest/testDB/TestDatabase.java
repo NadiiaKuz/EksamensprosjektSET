@@ -1,7 +1,10 @@
 package org.gruppe4.test.databaseTest.testDB;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 import org.gruppe4.enums.UserType;
 import org.gruppe4.enums.Role;
@@ -28,10 +31,10 @@ public abstract class TestDatabase {
             // Lager tabeller i samme format som vi har dem i databasen
             // Starter med UserTypes og Role fordi Users har fremmednøkler fra dem
             statement.execute("CREATE TABLE UserTypes (idUserType INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "userType VARCHAR(45))");
+                    "userType ENUM('STUDENT', 'ADULT', 'SENIOR', 'CHILD') NOT NULL)");
 
             statement.execute("CREATE TABLE Roles (idRole INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "roleType VARCHAR(45))");
+                    "roleType ENUM('USER', 'ADMIN') NOT NULL)");
 
             statement.execute("CREATE TABLE Users (idUser INT AUTO_INCREMENT PRIMARY KEY, " +
                     "firstName VARCHAR(45), " + "lastName VARCHAR(45), " + "email VARCHAR(45), " +
@@ -56,7 +59,7 @@ public abstract class TestDatabase {
             insertIntoRoles("USER");
             insertIntoRoles("ADMIN");
 
-            //Legger til dummydata for et par brukere
+            //Legger til dummydata for noen brukere
             insertIntoUsers("Karl", "Andersen", "karan@example.com", "lkmasdf",
                     "Oslo-Drøbak", 1, 2);
             insertIntoUsers("Kari", "Olsen", "karol@example.com", "kariolsen",
@@ -69,7 +72,7 @@ public abstract class TestDatabase {
 
 
 
-
+    //Metode for å legge userType inn i databasen
     public void insertIntoUserTypes(String name) throws Exception{
         String sql = "INSERT INTO UserTypes (userType) VALUES (?)";
 
@@ -80,6 +83,7 @@ public abstract class TestDatabase {
         }
     }
 
+    //Metode for å legge roleType inn i databasen
     public void insertIntoRoles(String name) throws Exception{
         String sql = "INSERT INTO Roles (roleType) VALUES (?)";
 
@@ -111,6 +115,7 @@ public abstract class TestDatabase {
     public int countRowsInTable(String tableName) throws Exception{
         String sql = "SELECT COUNT(*) FROM " + tableName;
 
+        //Jeg følger forelesningseksempelet her, men får warning om bruk av String i sql
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -173,6 +178,28 @@ public abstract class TestDatabase {
                 return resultSet.getString("favoriteRoute");
             }else throw new Exception("No user found");
 
+        }
+    }
+
+    public String getUserType(int idUserType) throws Exception{
+        String sql = "SELECT userType FROM UserTypes WHERE idUserType=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idUserType);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("userType");
+            }else throw new Exception("No userType found");
+        }
+    }
+
+    public String getRoleType(int idRole) throws Exception{
+        String sql = "SELECT roleType FROM Roles WHERE idRole=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idRole);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("roleType");
+            }else throw new Exception("No roleType found");
         }
     }
 }
