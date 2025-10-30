@@ -16,6 +16,7 @@ public class DatabaseIntegrationTests {
         // Starter testdatabasen
         testDB = new MySQLDatabaseConnectionTest();
         testDB.startDB();
+        testDB.createTables();
         testDB.createDummyData();
     }
 
