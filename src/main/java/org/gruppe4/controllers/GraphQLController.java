@@ -4,16 +4,17 @@ import com.sun.jdi.connect.Transport;
 import graphql.query.GraphQLQuery;
 import graphql.query.QueryObject;
 import io.javalin.http.Context;
+import org.gruppe4.repository.GraphQLRepository;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class GraphQLController {
-    private GraphQLQuery graphQLQuery;
+    private GraphQLRepository graphQLRepository;
 
-    public GraphQLController(GraphQLQuery graphQLQuery) {
-        this.graphQLQuery = graphQLQuery;
+    public GraphQLController(GraphQLRepository graphQLRepository) {
+        this.graphQLRepository = graphQLRepository;
     }
 
     public void getTransportRoutes(Context context) {
@@ -25,8 +26,8 @@ public class GraphQLController {
         String dateString = context.formParam("date");
         String timeString = context.formParam("time");
 
-        ArrayList<String> transportTypes = new ArrayList<>();
-        transportTypes.add(context.formParam("transportTypes"));
+        // prøver med kun 1 transportMode for nå
+        String transportMode = context.formParam("transportMode");
 
         if (fromStopId.isEmpty() || toStopId.isEmpty()) {
             context.result("Please enter a valid stop ID");
@@ -40,6 +41,8 @@ public class GraphQLController {
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime dateTime;
+            OffsetDateTime offsetDateTime = null;
 
             if (!dateString.isEmpty() || !timeString.isEmpty()) {
                 if (dateString.isEmpty()) {
@@ -54,11 +57,48 @@ public class GraphQLController {
                     time = LocalTime.parse(timeString, dateFormatter);
                 }
 
-                LocalDateTime dateTime = LocalDateTime.of(date, time);
-                OffsetDateTime offsetDateTime = OffsetDateTime.of(dateTime, ZoneOffset.ofHours(1));
-
+                dateTime = LocalDateTime.of(date, time);
+                offsetDateTime = OffsetDateTime.of(dateTime, ZoneOffset.ofHours(1));
             }
 
+            // Lager Query objekter med toStop og fromStop + andre parametere dersom brukeren har satt inn mer info
+            if (viaStopId.isEmpty()) {
+                if (offsetDateTime == null) {
+                    if (transportMode.isEmpty()) {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    } else {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportMode);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    }
+                } else {
+                    if (transportMode.isEmpty()) {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    } else {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportMode);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    }
+                }
+            } else {
+                if (offsetDateTime == null) {
+                    if (transportMode.isEmpty()) {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    } else {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, transportMode);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    }
+                } else {
+                    if (transportMode.isEmpty()) {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    } else {
+                        QueryObject queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime, transportMode);
+                        graphQLRepository.getTransportRoutes(queryObject);
+                    }
+                }
+            }
 
         }
     }
