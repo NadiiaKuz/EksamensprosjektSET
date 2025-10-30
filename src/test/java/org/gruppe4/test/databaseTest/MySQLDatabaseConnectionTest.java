@@ -3,43 +3,49 @@ package org.gruppe4.test.databaseTest;
 import org.gruppe4.database.MySQLDatabaseConnection;
 import org.gruppe4.test.databaseTest.testDB.TestDatabase;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import java.sql.Connection;
 
+@Testcontainers
 public class MySQLDatabaseConnectionTest extends TestDatabase {
-
-    //Lager container til bruk i Docker Desktop
-    private static final MySQLContainer<?> mysql =
-            new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
-                    .withDatabaseName("testdb")
-                    .withUsername("testuser")
-                    .withPassword("testpassword");
 
     //Lager et objekt av MySQLDatabaseConnection klassen
     private MySQLDatabaseConnection dbConnection;
 
+    //Oppretter en testcontainer til bruk i Docker Desktop
+    @Container
+    private final static MySQLContainer<?> mysql = new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
+            .withDatabaseName("testdb")
+            .withUsername("testuser")
+            .withPassword("testpassword");
+
     //Lager override av startDB() metoden, slik at den kan brukes med testcontaineren
     @Override
-    public Connection startDB() throws Exception {
-        mysql.start();
+    public void startDB() throws Exception {
 
-        //Starter docker containeren, dette krever at man har Docker Desktop installert
+        if(!mysql.isRunning()){
+            mysql.start();
+        }
+        //Bruker MySQLDatabaseConnection til å lage en forbindelse
         dbConnection = new MySQLDatabaseConnection(
                 mysql.getJdbcUrl(),
                 mysql.getUsername(),
                 mysql.getPassword()
         );
 
+
         connection = dbConnection.startDB();
         createTables();
         createDummyData();
-        return connection;
     }
     //Lukker testdatabasen
+    //Brukte å kaste Exception men fikk en commit warning om at den ikke vil kaste exception
     @Override
-    public void stopDB() throws Exception {
+    public void stopDB() {
+        if (dbConnection!= null){
         dbConnection.stopDB();
         mysql.stop();
     }
-}
+}}
 

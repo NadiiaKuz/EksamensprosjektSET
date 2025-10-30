@@ -1,10 +1,8 @@
 package org.gruppe4.test.databaseTest.testDB;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+
 import org.gruppe4.enums.UserType;
 import org.gruppe4.enums.Role;
 
@@ -13,7 +11,7 @@ public abstract class TestDatabase {
 
     protected Connection connection;
 
-    public abstract Connection startDB() throws Exception;
+    public abstract void startDB() throws Exception;
 
     public abstract void stopDB() throws Exception;
 
@@ -63,7 +61,8 @@ public abstract class TestDatabase {
                     "Oslo-Drøbak", 1, 2);
             insertIntoUsers("Kari", "Olsen", "karol@example.com", "kariolsen",
                     "Alta-Hammerfest", 2, 1);
-
+            insertIntoUsers("Per", "Buljo", "pebul@example.com", "asdflkj",
+                    "Fredrikstad-Sarpsborg", 4, 1);
 
         }
     }
@@ -120,13 +119,60 @@ public abstract class TestDatabase {
     }
 
     public String getUserFirstName(int idUser) throws Exception{
+        //Lager en sql spørring, hvor idUser er placeholder først indeks(?)
         String sql = "SELECT firstName FROM Users WHERE idUser=?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            //Setter den første placeholderen i sql variabelen til å være vår parameter idUser
+            preparedStatement.setInt(1, idUser);
+
+            //Kjører sql-spørringen og returnnewrer et "resultSet" vi kan iterere gjennom
+            //Ettersom at hver idUser er unik skal det kun være ett resultat
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            //Hvis et resultat finnes returnerer vi det som ligger i kolonnen med navn "firstName"
+            //Ellers kaster vi en exception
+            if (resultSet.next()) {
+                return resultSet.getString("firstName");
+            } else throw new Exception("No user found");
+        }
+    }
+
+    public String getUserLastName(int idUser) throws Exception{
+        String sql = "SELECT lastName FROM Users WHERE idUser=?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, idUser);
             ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return resultSet.getString("firstName");
+            if(resultSet.next()){
+                return resultSet.getString("lastName");
+            }else throw new Exception("No user found");
+        }
+    }
+
+    public String getUserEmail(int idUser) throws Exception{
+        String sql = "SELECT email FROM Users WHERE idUser=?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idUser);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("email");
+            }else throw new Exception("No user found");
+
+        }
+    }
+
+    public String getUserFavoriteRoute(int idUser) throws Exception{
+        String sql = "SELECT favoriteRoute FROM Users WHERE idUser=?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idUser);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                return resultSet.getString("favoriteRoute");
+            }else throw new Exception("No user found");
+
         }
     }
 }
