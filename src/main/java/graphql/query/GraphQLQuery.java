@@ -24,6 +24,83 @@ public class GraphQLQuery {
         return gson.toJson(queryMap);
     }
 
+    public String getQueryBasedOnProvidedParameters() {
+       String query = "";
+
+        if (queryObject.getViaStop() == null) {
+            if (queryObject.getDateTime() == null) {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
+                } else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getTransportModes());
+                    }
+                }
+            }
+            else {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
+                }
+                else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getDateTime(), queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getDateTime(), queryObject.getTransportModes());
+                    }
+                }
+            }
+        }
+        // med viaStop variabelen
+        else {
+            if (queryObject.getDateTime() == null) {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getViaStop());
+                } else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getViaStop(), queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getViaStop(), queryObject.getTransportModes());
+                    }
+                }
+            }
+            else {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                 queryObject.getViaStop(), queryObject.getDateTime());
+                }
+                else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getViaStop(), queryObject.getDateTime(),
+                                     queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                     queryObject.getViaStop(), queryObject.getDateTime(),
+                                     queryObject.getTransportModes());
+                    }
+                }
+            }
+        }
+
+     return query;
+    }
+
     public String getQuery(int fromStop, int toStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
         String dateTimeString = dateTime.toString();
