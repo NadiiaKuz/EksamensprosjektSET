@@ -23,6 +23,7 @@ public class GraphQLController {
 
         String viaStopId = context.formParam("viaStopId");
 
+        // input=date og input=time. Vurderer input=datetime istedenfor, men det kommer senere
         String dateString = context.formParam("date");
         String timeString = context.formParam("time");
 
@@ -34,7 +35,7 @@ public class GraphQLController {
         } else {
             int fromStopIdInt = Integer.parseInt(fromStopId);
             int toStopIdInt = Integer.parseInt(toStopId);
-            int viaStopIdInt = -1;
+            Integer viaStopIdInt = null;
 
             if (!viaStopId.isEmpty()) {
                 viaStopIdInt = Integer.parseInt(viaStopId);
@@ -43,11 +44,15 @@ public class GraphQLController {
             LocalDate date;
             LocalTime time;
 
+            // formatene brukes til LocalDate's parse metode
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalDateTime dateTime;
+
+            // LocalDateTime skal parses til OffsetDateTime, Entur bruker dette tidsformatet
             OffsetDateTime offsetDateTime = null;
 
+            // dersom bruker har valgt f.eks kun tid, så formateres det med nåværende dato
             if (!dateString.isEmpty() || !timeString.isEmpty()) {
                 if (dateString.isEmpty()) {
                     date = LocalDate.now();
@@ -70,9 +75,10 @@ public class GraphQLController {
         }
     }
 
+    /* lages når deserialisering er på plass
     public void checkForDelayedTransports(Context context) {
 
     }
-
+*/
 
 }

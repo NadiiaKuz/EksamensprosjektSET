@@ -13,18 +13,36 @@ public class GraphQLQuery {
     }
 
     private String returnJsonQuery(String query) {
-        // Create a map to hold the query
+        // lager map for å holde query
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("query", query);
 
-        // Use Gson to convert the map to JSON
+        // bruker Gson for å konvertere map til JSON
+        // dette gjøres fordi Entur aksepterer kun JSON forespørsler
         Gson gson = new Gson();
 
-        // Print the JSON output
         return gson.toJson(queryMap);
     }
 
+<<<<<<< HEAD
     public String getQueryBasedOnProvidedParameters() {
+       String query = "";
+
+       // vanlige fra-til forespørsler (uten viaStopp variabel)
+        if (queryObject.getViaStop() == null) {
+
+            // brukeren har ikke spesifisert tid/dato, da default-er Entur til nåværende tidspunkt
+            if (queryObject.getDateTime() == null) {
+
+                // bruker har ikke valgt transporttype
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    // forespørsel med kun start- og sluttstopp parametere
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
+                } else {
+                    if (queryObject.getTransportMode() != null) {
+                        // forespørsel med fra-til, og (1) transporttype som parametere
+=======
+    public String getQueryBasedOnProvidedParameters(QueryObject queryObject) {
        String query = "";
 
         if (queryObject.getViaStop() == null) {
@@ -33,16 +51,25 @@ public class GraphQLQuery {
                     query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
                 } else {
                     if (queryObject.getTransportMode() != null) {
+>>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
                                      queryObject.getTransportMode());
                     }
 
                     else if (queryObject.getTransportModes() != null) {
+<<<<<<< HEAD
+                        // forespørsel med fra-til, og flere transporttyper som parametere
+=======
+>>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
                                      queryObject.getTransportModes());
                     }
                 }
             }
+<<<<<<< HEAD
+            // bruker har spesifisert tid og/eller dato
+=======
+>>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
             else {
                 if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
                     query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
