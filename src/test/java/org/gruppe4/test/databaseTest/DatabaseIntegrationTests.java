@@ -1,6 +1,10 @@
+/*
+Noen tester jeg skrev før jeg fant ut at jeg kun trengte å teste createUser() fra branchen feature---createUserInDatabase
+Jeg hentet alle nødvendige filer derfra og lagde ny integrasjonstest i UsersRepositoryIntegrationTests.java
 package org.gruppe4.test.databaseTest;
 
-import org.gruppe4.test.databaseTest.testDB.MySQLDatabaseConnectionTest;
+
+import org.gruppe4.test.databaseTest.testDB.TestContainerDatabase;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseIntegrationTests {
 
-    private static MySQLDatabaseConnectionTest testDB;
+    private static TestContainerDatabase testDB;
 
     @BeforeAll
     public static void setUpTestDB() throws Exception {
         // Starter testdatabasen
-        testDB = new MySQLDatabaseConnectionTest();
+        testDB = new TestContainerDatabase();
         testDB.startDB();
         testDB.createTables();
         testDB.createDummyData();
@@ -207,3 +211,6 @@ public class DatabaseIntegrationTests {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 }
+
+
+ */

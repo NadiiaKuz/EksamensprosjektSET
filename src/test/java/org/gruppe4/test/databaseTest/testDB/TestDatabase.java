@@ -4,7 +4,7 @@ package org.gruppe4.test.databaseTest.testDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.ResultSet;
+
 
 import org.gruppe4.enums.UserType;
 import org.gruppe4.enums.Role;
@@ -14,7 +14,7 @@ public abstract class TestDatabase {
 
     protected Connection connection;
 
-    public abstract void startDB() throws Exception;
+    public abstract  Connection startDB() throws Exception;
 
     public abstract void stopDB() throws Exception;
 
@@ -34,7 +34,7 @@ public abstract class TestDatabase {
                     "userType ENUM('STUDENT', 'ADULT', 'SENIOR', 'CHILD') NOT NULL)");
 
             statement.execute("CREATE TABLE Roles (idRole INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "roleType ENUM('USER', 'ADMIN') NOT NULL)");
+                    "roleType ENUM('USER', 'ADMIN', 'DEVELOPER') NOT NULL)");
 
             statement.execute("CREATE TABLE Users (idUser INT AUTO_INCREMENT PRIMARY KEY, " +
                     "firstName VARCHAR(45), " + "lastName VARCHAR(45), " + "email VARCHAR(45), " +
@@ -58,6 +58,7 @@ public abstract class TestDatabase {
             //Legger inn rollene i dummydata
             insertIntoRoles("USER");
             insertIntoRoles("ADMIN");
+            insertIntoRoles("DEVELOPER");
 
             //Legger til dummydata for noen brukere
             insertIntoUsers("Karl", "Andersen", "karan@example.com", "lkmasdf",
@@ -111,6 +112,7 @@ public abstract class TestDatabase {
             preparedStatement.executeUpdate();
         }
     }
+    /*
 
     public int countRowsInTable(String tableName) throws Exception{
         String sql = "SELECT COUNT(*) FROM " + tableName;
@@ -202,6 +204,8 @@ public abstract class TestDatabase {
             }else throw new Exception("No roleType found");
         }
     }
+
+     */
 }
 
 
