@@ -128,6 +128,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -170,6 +172,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -214,6 +218,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -257,6 +263,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -303,6 +311,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -349,6 +359,8 @@ public class GraphQLQuery {
                     tripPatterns {
                       aimedStartTime
                       aimedEndTime
+                      expectedStartTime
+                      expectedEndTime
                       duration
                       legs {
                         distance
@@ -402,6 +414,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
@@ -453,6 +467,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
@@ -507,6 +523,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
@@ -562,6 +580,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
@@ -619,6 +639,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
@@ -674,6 +696,8 @@ public class GraphQLQuery {
                       tripPatterns {
                         aimedStartTime
                         aimedEndTime
+                        expectedStartTime
+                        expectedEndTime
                         duration
                         legs {
                           distance
