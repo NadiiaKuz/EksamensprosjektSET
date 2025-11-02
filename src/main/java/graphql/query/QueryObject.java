@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class QueryObject {
     private int fromStop;
     private int toStop;
-    private int viaStop;
+    private Integer viaStop = null;
     private OffsetDateTime dateTime;
     private String transportMode;
     private ArrayList<String> transportModes;
@@ -98,7 +98,7 @@ public class QueryObject {
         return toStop;
     }
 
-    public int getViaStop() {
+    public Integer getViaStop() {
         return viaStop;
     }
 
