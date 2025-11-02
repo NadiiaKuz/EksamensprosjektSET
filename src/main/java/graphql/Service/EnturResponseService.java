@@ -11,10 +11,12 @@ import graphql.query.QueryObject;
 public class EnturResponseService {
 
     private final GraphQLClient client;
+    private final GraphQLQuery queryBuilder;
     private final Gson gson;
 
     public EnturResponseService() {
         this.client = new GraphQLClient();
+        this.queryBuilder = new GraphQLQuery(null);
         this.gson = new Gson();
     }
 
@@ -33,16 +35,19 @@ public class EnturResponseService {
 
     public EnturResponse getEnturResponse(int fromStopId, int toStopId) {
         try {
+            // opprett QueryObject basert på parameterne
             QueryObject queryObject = new QueryObject(fromStopId, toStopId);
 
-            GraphQLQuery querybuilder = new GraphQLQuery(queryObject);
+            // la GraphQLQuery automatisk finne riktig forespørsel
+            String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
 
-            String body = querybuilder.getQuery(fromStopId, toStopId);
-
+            // send forespørsel til Entur API
             String jsonResponse = client.sendGraphQLRequest(body);
 
+            // fjern eventuelt “Response:”-prefix
             String json = removeResponsePrefix(jsonResponse);
 
+            // deserialiser JSON til DTO
             EnturResponse dto = gson.fromJson(json, EnturResponse.class);
 
             return dto;

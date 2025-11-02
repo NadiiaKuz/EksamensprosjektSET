@@ -24,6 +24,97 @@ public class GraphQLQuery {
         return gson.toJson(queryMap);
     }
 
+
+    public String getQueryBasedOnProvidedParameters(QueryObject queryObject) {
+        String query = "";
+
+        // vanlige fra-til forespørsler (uten viaStopp variabel)
+        if (queryObject.getViaStop() == null) {
+
+            // brukeren har ikke spesifisert tid/dato, da default-er Entur til nåværende tidspunkt
+            if (queryObject.getDateTime() == null) {
+
+                // bruker har ikke valgt transporttype
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    // forespørsel med kun start- og sluttstopp parametere
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
+                } else {
+                    if (queryObject.getTransportMode() != null) {
+                        // forespørsel med fra-til, og (1) transporttype som parametere
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        // forespørsel med fra-til, og flere transporttyper som parametere
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getTransportModes());
+                    }
+                }
+            }
+            // bruker har spesifisert tid og/eller dato
+            else {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
+                }
+                else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getDateTime(), queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getDateTime(), queryObject.getTransportModes());
+                    }
+                }
+            }
+        }
+        // med viaStop variabelen
+        else {
+            if (queryObject.getDateTime() == null) {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getViaStop());
+                } else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getViaStop(), queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getViaStop(), queryObject.getTransportModes());
+                    }
+                }
+            }
+            else {
+                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                            queryObject.getViaStop(), queryObject.getDateTime());
+                }
+                else {
+                    if (queryObject.getTransportMode() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getViaStop(), queryObject.getDateTime(),
+                                queryObject.getTransportMode());
+                    }
+
+                    else if (queryObject.getTransportModes() != null) {
+                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                                queryObject.getViaStop(), queryObject.getDateTime(),
+                                queryObject.getTransportModes());
+                    }
+                }
+            }
+        }
+
+        return query;
+    }
+
+
+
+
+
     public String getQuery(int fromStop, int toStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
         String dateTimeString = dateTime.toString();

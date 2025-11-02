@@ -1,10 +1,19 @@
-
 import graphql.Service.EnturResponseService;
 import graphql.dto.EnturResponse;
 import graphql.dto.TripPattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+
+/**
+ * Integrasjonstest
+ * Denne testen henter faktisk data fra Entur API-et via EnturResponseService.
+ * Den bekrefter at hele kjeden fungerer:
+ *  Query bygges dynamisk fra QueryObject
+ *  API kalles via GraphQLClient
+ *  JSON deserialiseres korrekt til EnturResponse DTO
+ */
 
 public class EnturResponseServiceIntegrationTest {
 
@@ -36,7 +45,7 @@ public class EnturResponseServiceIntegrationTest {
         System.out.println("Trip route successfully received from Entur");
         System.out.println("Aimed StartTime: " + tripPattern.aimedStartTime);
         System.out.println("Aimed EndTime: " + tripPattern.aimedEndTime);
-        System.out.println("Duration: " + tripPattern.duration);
+        System.out.println("Duration in seconds: " + tripPattern.duration);
         System.out.println("Total legs: " + tripPattern.legs.size());
     }
 }
