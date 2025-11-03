@@ -9,7 +9,9 @@ import org.gruppe4.test.databaseTest.testDB.TestDatabase;
 import org.junit.jupiter.api.*;
 
 
+
 import java.sql.Connection;
+
 
 public class UsersRepositoryIntegrationTests {
 
@@ -63,5 +65,6 @@ public class UsersRepositoryIntegrationTests {
         // Assert
         Assertions.assertEquals("olanor@example.com", usersRepository.getUserByEmail("olanor@example.com").getMail());
     }
+
 
 }
