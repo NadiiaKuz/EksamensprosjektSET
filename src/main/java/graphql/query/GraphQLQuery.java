@@ -13,14 +13,14 @@ public class GraphQLQuery {
     }
 
     private String returnJsonQuery(String query) {
-        // Create a map to hold the query
+        // lager map for å holde query
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("query", query);
 
-        // Use Gson to convert the map to JSON
+        // bruker Gson for å konvertere map til JSON
+        // dette gjøres fordi Entur aksepterer kun JSON forespørsler
         Gson gson = new Gson();
 
-        // Print the JSON output
         return gson.toJson(queryMap);
     }
 
