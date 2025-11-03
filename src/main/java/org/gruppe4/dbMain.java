@@ -1,6 +1,6 @@
 package org.gruppe4;
 
-import org.gruppe4.database.MySQLDatabaseConnection;
+import org.gruppe4.database.MySQLDatabase;
 import org.gruppe4.database.MySQLDatabaseException;
 
 import java.io.FileInputStream;
@@ -26,7 +26,7 @@ public class dbMain {
         String password = properties.getProperty("db.password");
 
         // Lager kobling
-        MySQLDatabaseConnection dbConnection = new MySQLDatabaseConnection(url, user, password);
+        MySQLDatabase dbConnection = new MySQLDatabase(url, user, password);
         Connection conn = null;
 
         try {

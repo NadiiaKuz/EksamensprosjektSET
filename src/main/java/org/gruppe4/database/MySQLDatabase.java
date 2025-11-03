@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class MySQLDatabaseConnection {
+public class MySQLDatabase {
 
     private String url;
     private String username;
@@ -12,7 +12,7 @@ public class MySQLDatabaseConnection {
 
     private Connection connection;
 
-    public MySQLDatabaseConnection(String url, String username, String password) {
+    public MySQLDatabase(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

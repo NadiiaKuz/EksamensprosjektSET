@@ -24,11 +24,11 @@ public class GraphQLQuery {
         return gson.toJson(queryMap);
     }
 
-<<<<<<< HEAD
-    public String getQueryBasedOnProvidedParameters() {
-       String query = "";
 
-       // vanlige fra-til forespørsler (uten viaStopp variabel)
+    public String getQueryBasedOnProvidedParameters(QueryObject queryObject) {
+        String query = "";
+
+        // vanlige fra-til forespørsler (uten viaStopp variabel)
         if (queryObject.getViaStop() == null) {
 
             // brukeren har ikke spesifisert tid/dato, da default-er Entur til nåværende tidspunkt
@@ -41,35 +41,18 @@ public class GraphQLQuery {
                 } else {
                     if (queryObject.getTransportMode() != null) {
                         // forespørsel med fra-til, og (1) transporttype som parametere
-=======
-    public String getQueryBasedOnProvidedParameters(QueryObject queryObject) {
-       String query = "";
-
-        if (queryObject.getViaStop() == null) {
-            if (queryObject.getDateTime() == null) {
-                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
-                } else {
-                    if (queryObject.getTransportMode() != null) {
->>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getTransportMode());
+                                queryObject.getTransportMode());
                     }
 
                     else if (queryObject.getTransportModes() != null) {
-<<<<<<< HEAD
                         // forespørsel med fra-til, og flere transporttyper som parametere
-=======
->>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getTransportModes());
+                                queryObject.getTransportModes());
                     }
                 }
             }
-<<<<<<< HEAD
             // bruker har spesifisert tid og/eller dato
-=======
->>>>>>> 83cbc98877977d85020c81dda4a7b820c9a52e4d
             else {
                 if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
                     query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
@@ -77,12 +60,12 @@ public class GraphQLQuery {
                 else {
                     if (queryObject.getTransportMode() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getDateTime(), queryObject.getTransportMode());
+                                queryObject.getDateTime(), queryObject.getTransportMode());
                     }
 
                     else if (queryObject.getTransportModes() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getDateTime(), queryObject.getTransportModes());
+                                queryObject.getDateTime(), queryObject.getTransportModes());
                     }
                 }
             }
@@ -95,38 +78,42 @@ public class GraphQLQuery {
                 } else {
                     if (queryObject.getTransportMode() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getViaStop(), queryObject.getTransportMode());
+                                queryObject.getViaStop(), queryObject.getTransportMode());
                     }
 
                     else if (queryObject.getTransportModes() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getViaStop(), queryObject.getTransportModes());
+                                queryObject.getViaStop(), queryObject.getTransportModes());
                     }
                 }
             }
             else {
                 if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
                     query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                 queryObject.getViaStop(), queryObject.getDateTime());
+                            queryObject.getViaStop(), queryObject.getDateTime());
                 }
                 else {
                     if (queryObject.getTransportMode() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getViaStop(), queryObject.getDateTime(),
-                                     queryObject.getTransportMode());
+                                queryObject.getViaStop(), queryObject.getDateTime(),
+                                queryObject.getTransportMode());
                     }
 
                     else if (queryObject.getTransportModes() != null) {
                         query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                     queryObject.getViaStop(), queryObject.getDateTime(),
-                                     queryObject.getTransportModes());
+                                queryObject.getViaStop(), queryObject.getDateTime(),
+                                queryObject.getTransportModes());
                     }
                 }
             }
         }
 
-     return query;
+        return query;
     }
+
+
+
+
 
     public String getQuery(int fromStop, int toStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
