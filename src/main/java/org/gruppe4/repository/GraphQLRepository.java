@@ -44,6 +44,6 @@ public class GraphQLRepository {
 
     public String getTransportRoutes(QueryObject queryObject) {
         GraphQLQuery graphQLQuery = new GraphQLQuery(queryObject);
-        return graphQLQuery.getQueryBasedOnProvidedParameters();
+        return graphQLQuery.getQueryBasedOnProvidedParameters(queryObject);
     }
 }
