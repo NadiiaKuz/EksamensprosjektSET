@@ -35,7 +35,9 @@ public class UsersRepository {
 
             while (resultSet.next()) {
                 count++;
-
+                // Siden vi bruker abstraksjonen som et repositorymønster, kan vi ikke være helt sikre på at
+                // den eksisterende databasen ble opprettet riktig. Det kan være en situasjon der databasen
+                // ble importert fra en annen server der e-postadressen tilfeldigvis ikke er en unik verdi.
                 if (count>1){
                     throw new UserRepositoryException("Multiple users found with email: " + userEmail);
                 }
