@@ -1,6 +1,7 @@
 package org.gruppe4.controllers;
 
 import com.sun.jdi.connect.Transport;
+import graphql.dto.TripPattern;
 import graphql.query.GraphQLQuery;
 import graphql.query.QueryObject;
 import io.javalin.http.Context;
@@ -17,7 +18,7 @@ public class GraphQLController {
         this.graphQLRepository = graphQLRepository;
     }
 
-    public void getTransportRoutes(Context context) {
+    public void getTransportRoutes(Context context) throws Exception {
         String fromStopId = context.formParam("fromStopId");
         String toStopId = context.formParam("toStopId");
 
@@ -71,7 +72,7 @@ public class GraphQLController {
             }
 
             QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, transportMode);
-            String response = graphQLRepository.getTransportRoutes(query);
+            ArrayList<TripPattern> response = graphQLRepository.getTransportRoutes(query);
         }
     }
 

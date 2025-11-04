@@ -1,4 +1,4 @@
-import graphql.client.GraphQLClient;
+/*import graphql.client.GraphQLClient;
 import graphql.query.GraphQLQuery;
 import graphql.query.QueryObject;
 import org.gruppe4.enums.TransportType;
@@ -33,16 +33,17 @@ public class TestGraphQL {
 
         QueryObject queryObject = new QueryObject(60053, 58794, offsetDateTime, transportModes);
         GraphQLQuery query = new GraphQLQuery(queryObject);
-
+*/
         /*
         // Stop ID 60053: Halden stasjon, stop ID 58794: Fredrikstad stasjon
         String response = client.sendGraphQLRequest(query.getQuery(60045, 59872, 62339, customTime, transportModes));
         */
 
         //String response = client.sendGraphQLRequest(query.getQuery(queryObject.getFromStop(), queryObject.getToStop(), queryObject.getDateTime(), transportModes));
-
+/*
         String response = client.sendGraphQLRequest(query.getQueryBasedOnProvidedParameters());
 
         System.out.println(response);
     }
 }
+*/

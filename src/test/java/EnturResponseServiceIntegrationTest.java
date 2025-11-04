@@ -1,6 +1,9 @@
 import graphql.Service.EnturResponseService;
+import graphql.client.GraphQLClient;
 import graphql.dto.EnturResponse;
 import graphql.dto.TripPattern;
+import graphql.query.GraphQLQuery;
+import graphql.query.QueryObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,15 +22,23 @@ public class EnturResponseServiceIntegrationTest {
 
     @Test
     @DisplayName("Integrasjonstest – importing actual Entur-response and deserializing correctly")
-    public void testGetEnturResponseFromEnturAPI() {
+    public void testGetEnturResponseFromEnturAPI() throws Exception {
 
         // Arrange
         EnturResponseService service = new EnturResponseService();
         int fromStopId = 60053; // Halden
         int toStopId = 58794;   // Fredrikstad
 
+        QueryObject queryObject = new QueryObject(fromStopId, toStopId);
+        GraphQLQuery graphQLQuery = new GraphQLQuery(queryObject);
+        String body = graphQLQuery.getQueryBasedOnProvidedParameters(queryObject);
+
+        GraphQLClient client = new GraphQLClient();
+        String jsonResponse = client.sendGraphQLRequest(body);
+
+
         // Act
-        EnturResponse response = service.getEnturResponse(fromStopId, toStopId);
+        EnturResponse response = service.getEnturResponse(jsonResponse);
 
         // Assert
         Assertions.assertNotNull(response, "Response from Entur is null");

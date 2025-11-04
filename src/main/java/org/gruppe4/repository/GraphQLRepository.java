@@ -1,15 +1,28 @@
 package org.gruppe4.repository;
+import graphql.Service.EnturResponseService;
+import graphql.client.GraphQLClient;
+import graphql.dto.EnturResponse;
 import graphql.query.GraphQLQuery;
 import graphql.query.QueryObject;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+
+import graphql.dto.EnturResponse;
+import graphql.dto.TripPattern;
+import java.util.List;
 
 public class GraphQLRepository {
-    public String queryResponse;
+    private final GraphQLClient client;
 
-    public QueryObject createQueryObject(int toStopIdInt, int fromStopIdInt, Integer viaStopIdInt, OffsetDateTime offsetDateTime, String transportMode) {
-        QueryObject queryObject;
+    public GraphQLRepository() {
+        this.client = new GraphQLClient();
+    }
+
+    public QueryObject createQueryObject(int toStopIdInt, int fromStopIdInt, Integer viaStopIdInt,
+                                         OffsetDateTime offsetDateTime, String transportMode) {
 
         // Lager Query objekter med toStop og fromStop + andre parametere dersom brukeren har satt inn mer info
+        QueryObject queryObject;
         if (viaStopIdInt == null) {
             if (offsetDateTime == null) {
                 if (transportMode.isEmpty()) {
@@ -42,8 +55,20 @@ public class GraphQLRepository {
         return queryObject;
     }
 
-    public String getTransportRoutes(QueryObject queryObject) {
-        GraphQLQuery graphQLQuery = new GraphQLQuery(queryObject);
-        return graphQLQuery.getQueryBasedOnProvidedParameters();
+    public ArrayList<TripPattern> getTransportRoutes(QueryObject queryObject) throws Exception {
+        GraphQLQuery queryBuilder = new GraphQLQuery(queryObject);
+        String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
+        String jsonResponse = client.sendGraphQLRequest(body);
+        EnturResponseService responseService = new EnturResponseService();
+
+        EnturResponse response = responseService.getEnturResponse(jsonResponse);
+        ArrayList<TripPattern> tripPatterns = new ArrayList<>();
+
+        if (response != null) {
+            List<TripPattern> allTrips = response.data.trip.tripPatterns;
+            tripPatterns.addAll(allTrips);
+        }
+        // returnerer liste av alle ruter
+        return tripPatterns;
     }
 }
