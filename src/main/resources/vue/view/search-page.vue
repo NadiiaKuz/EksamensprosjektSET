@@ -1,11 +1,11 @@
 <template id="search-page-template">
     <h1>Hvor ønsker du å reise?</h1>
-    <form action="" method="get">
+    <form action="/api/search" method="post">
       <label for="start" id="startLabel">Fra:
-        <input type="text" id="start" placeholder="Hvor ønsker du å reise fra?">
+        <input type="text" id="start" name="startStop" placeholder="Hvor ønsker du å reise fra?">
       </label>
       <label for="end" id="endLabel">Til:
-        <input type="text" id="end" placeholder="Hvor ønsker du å reise til?">
+        <input type="text" id="end" name="endStop" placeholder="Hvor ønsker du å reise til?">
       </label>
 
       <!--HAMBURGER-->
@@ -19,19 +19,19 @@
             <button id="close">X</button>
             <label class="transportType">
               Buss
-              <input type="checkbox">
+              <input type="checkbox" name="type" value="BUS">
             </label>
             <label class="transportType">
               Tog
-              <input type="checkbox">
+              <input type="checkbox" name="type" value="RAIL">
             </label>
             <label class="transportType">
               Trikk
-              <input type="checkbox">
+              <input type="checkbox" name="type" value="TRAM">
             </label>
             <label class="transportType">
               Ferge
-              <input type="checkbox">
+              <input type="checkbox" name="FERRY">
             </label>
           </div>
         </div>

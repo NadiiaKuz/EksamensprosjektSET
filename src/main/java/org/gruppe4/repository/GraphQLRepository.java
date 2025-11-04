@@ -65,10 +65,14 @@ public class GraphQLRepository {
         ArrayList<TripPattern> tripPatterns = new ArrayList<>();
 
         if (response != null) {
-            List<TripPattern> allTrips = response.data.trip.tripPatterns;
-            tripPatterns.addAll(allTrips);
-        }
-        // returnerer liste av alle ruter
+            if (response.data != null) {
+                List<TripPattern> allTrips = response.data.trip.tripPatterns;
+                tripPatterns.addAll(allTrips);
+            } else
+                return null;
+        } else
+            return null;
+        // returnerer liste av alle tilgjengelige ruter
         return tripPatterns;
     }
 }
