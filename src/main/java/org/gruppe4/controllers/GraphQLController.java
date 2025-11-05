@@ -7,10 +7,13 @@ import graphql.query.QueryObject;
 import io.javalin.http.Context;
 import org.gruppe4.enums.TransportType;
 import org.gruppe4.repository.GraphQLRepository;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GraphQLController {
     private GraphQLRepository graphQLRepository;
@@ -78,14 +81,30 @@ public class GraphQLController {
             if (response == null) {
                 context.result("No transport routes found");
             } else {
-                context.result(response.get(0).aimedStartTime);
+                ArrayList<String> tripDetails = getStrings(response, query);
+                context.json(tripDetails);
             }
-            //}
         }
 
     /* lages når deserialisering er på plass
     public void checkForDelayedTransports(Context context) {
 
     }*/
+    }
+
+    @NotNull
+    private static ArrayList<String> getStrings(ArrayList<TripPattern> response, QueryObject query) {
+        ArrayList<String> tripDetails = new ArrayList<>();
+        for (TripPattern tripPattern : response) {
+            tripDetails.add("Starting stop: " + query.getFromStop());
+            tripDetails.add("End stop: " + query.getToStop());
+            tripDetails.add("Operator name: " + tripPattern.legs.get(0).line.operator.id);
+            tripDetails.add("Public code: " + tripPattern.legs.get(0).line.publicCode);
+            tripDetails.add("Transport mode: " + tripPattern.legs.get(0).line.transportMode);
+            tripDetails.add("Start time: " + tripPattern.aimedStartTime);
+            tripDetails.add("End time: " + tripPattern.aimedEndTime);
+            tripDetails.add("Duration in seconds: " + tripPattern.duration);
+        }
+        return tripDetails;
     }
 }
