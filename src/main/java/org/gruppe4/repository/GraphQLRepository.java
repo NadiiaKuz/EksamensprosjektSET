@@ -2,14 +2,18 @@ package org.gruppe4.repository;
 import graphql.Service.EnturResponseService;
 import graphql.client.GraphQLClient;
 import graphql.dto.EnturResponse;
+import graphql.dto.Trip;
 import graphql.query.GraphQLQuery;
 import graphql.query.QueryObject;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-
 import graphql.dto.EnturResponse;
 import graphql.dto.TripPattern;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GraphQLRepository {
     private final GraphQLClient client;
@@ -19,60 +23,104 @@ public class GraphQLRepository {
     }
 
     public QueryObject createQueryObject(int toStopIdInt, int fromStopIdInt, Integer viaStopIdInt,
-                                         OffsetDateTime offsetDateTime, String transportMode) {
+                                         OffsetDateTime offsetDateTime, ArrayList<String> transportModes) {
 
         // Lager Query objekter med toStop og fromStop + andre parametere dersom brukeren har satt inn mer info
         QueryObject queryObject;
         if (viaStopIdInt == null) {
             if (offsetDateTime == null) {
-                if (transportMode.isEmpty()) {
+                if (transportModes.isEmpty()) {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportMode);
+                    if (transportModes.size() > 1) {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                    } else {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes.getFirst());
+                    }
                 }
             } else {
-                if (transportMode.isEmpty()) {
+                if (transportModes.isEmpty()) {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportMode);
+                    if (transportModes.size() > 1) {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                    } else {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                    }
                 }
             }
         } else {
             if (offsetDateTime == null) {
-                if (transportMode.isEmpty()) {
+                if (transportModes.isEmpty()) {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, transportMode);
+                    if (transportModes.size() > 1) {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                    } else {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                    }
                 }
             } else {
-                if (transportMode.isEmpty()) {
+                if (transportModes.isEmpty()) {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime, transportMode);
+                    if (transportModes.size() > 1) {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                    } else {
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                    }
                 }
             }
         }
         return queryObject;
     }
 
-    public ArrayList<TripPattern> getTransportRoutes(QueryObject queryObject) throws Exception {
+    public List<TripPattern> getTransportRoutes(QueryObject queryObject) throws Exception {
+        EnturResponseService responseService = new EnturResponseService();
         GraphQLQuery queryBuilder = new GraphQLQuery(queryObject);
         String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
+
+        // Tester at queries blir laget riktig
+        System.out.println(body);
+
         String jsonResponse = client.sendGraphQLRequest(body);
-        EnturResponseService responseService = new EnturResponseService();
 
         EnturResponse response = responseService.getEnturResponse(jsonResponse);
-        ArrayList<TripPattern> tripPatterns = new ArrayList<>();
+        List<TripPattern> allTrips;
 
         if (response != null) {
-            if (response.data != null) {
-                List<TripPattern> allTrips = response.data.trip.tripPatterns;
-                tripPatterns.addAll(allTrips);
+            if (response.data.trip.tripPatterns != null) {
+                allTrips = response.data.trip.tripPatterns;
+
             } else
                 return null;
         } else
             return null;
         // returnerer liste av alle tilgjengelige ruter
-        return tripPatterns;
+        return allTrips;
+    }
+
+    @NotNull
+    public ArrayList<Map<String, Object>> formatTripPatterns(List<TripPattern> response, QueryObject query) {
+        ArrayList<Map<String, Object>> formattedTrips = new ArrayList<>();
+
+        //TripPattern tripP = response.data.trip.tripPatterns.get(0)
+
+        // Henter ut all reiseinfo fra hver rute og lagrer i eget hashmap
+        for (TripPattern tripPattern : response) {
+            Map<String, Object> trip = new HashMap<>();
+            trip.put("startStop", query.getFromStop());
+            trip.put("endStop", query.getToStop());
+            trip.put("operatorName", tripPattern.legs.get(0).line.operator.id);
+            trip.put("publicCode", tripPattern.legs.get(0).line.publicCode);
+            trip.put("transportMode", tripPattern.legs.get(0).line.transportMode);
+            trip.put("startTime", tripPattern.aimedStartTime);
+            trip.put("endTime", tripPattern.aimedEndTime);
+            trip.put("duration", tripPattern.duration);
+
+            // Legger hashmapen i sitt eget indeks i ArrayList-en
+            formattedTrips.add(trip);
+        }
+        return formattedTrips;
     }
 }
