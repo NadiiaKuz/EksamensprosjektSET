@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Object;
 
 public class GraphQLRepository {
     private final GraphQLClient client;
@@ -38,12 +39,13 @@ public class GraphQLRepository {
                         queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes.getFirst());
                     }
                 }
+                // tid/dato er satt inn
             } else {
                 if (transportModes.isEmpty()) {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
                 } else {
                     if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
                     } else {
                         queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
                     }
@@ -57,7 +59,7 @@ public class GraphQLRepository {
                     if (transportModes.size() > 1) {
                         queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
                     } else {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes.getFirst());
                     }
                 }
             } else {
@@ -65,7 +67,7 @@ public class GraphQLRepository {
                     queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
                 } else {
                     if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
+                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
                     } else {
                         queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
                     }
@@ -80,10 +82,19 @@ public class GraphQLRepository {
         GraphQLQuery queryBuilder = new GraphQLQuery(queryObject);
         String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
 
+        System.out.println("TESTT 1 queryObject: " + queryObject.getDateTime());
+       // System.out.println("TESTT 2 queryObject, 1 tType: " + queryObject.getTransportMode());
+        System.out.println("TESTT 2 queryObject: " + queryObject.getTransportModes());
+        System.out.println(queryObject.transportModes);
+
         // Tester at queries blir laget riktig
-        System.out.println(body);
+        System.out.println("TESTT 3 getQueryBasedOnProvidedParameters: " + body);
 
         String jsonResponse = client.sendGraphQLRequest(body);
+
+        System.out.println();
+        System.out.println("Repository test jsonResponse: " + jsonResponse);
+        System.out.println();
 
         EnturResponse response = responseService.getEnturResponse(jsonResponse);
         List<TripPattern> allTrips;

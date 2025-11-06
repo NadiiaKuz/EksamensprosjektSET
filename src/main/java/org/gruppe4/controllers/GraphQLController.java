@@ -48,24 +48,29 @@ public class GraphQLController {
         Integer viaStopIdInt = 0;
 
         ArrayList<String> formattedTransportModes = new ArrayList<>();
-        System.out.println(transportModes);
+        // test
+        System.out.println("Controller test transportModes: " + transportModes);
         for (String mode : transportModes) {
             System.out.println(mode);
         }
+
         if (transportModes != null && !transportModes.isEmpty()) {
-            for (String transportMode : transportModes) {
+            for ( int i = 0; i < transportModes.size(); i++ ) {
+                String mode = transportModes.get(i);
                 try {
                     // Enum conversion and processing
-                    for ( int i = 0; i < transportModes.size(); i++ ) {
-                        String placeholder = TransportType.valueOf(transportMode).getMode();
-                        formattedTransportModes.add(i, placeholder);
-                    }
+                    System.out.println("Controller test transportModes.size(): " + transportModes.size());
+                    String transport = TransportType.valueOf(mode).getMode();
+                    formattedTransportModes.add(i, transport);
+                    System.out.println("Controller test TransportType.valueOf() for-loop: " + TransportType.valueOf(mode));
+                    System.out.println("Controller test formattedTransportModes for-loop: " + transport);
                 } catch (IllegalArgumentException e) {
                     // Log en spesifik feilmelding hvis den typene er ukjent/genererer en feil
-                    System.err.println("Ukjent transport type: " + transportMode);
+                    System.err.println("Ukjent transport type: " + mode);
                 }
             }
         }
+        System.out.println("Controller test formattedTransportModes final result: " + formattedTransportModes);
 
         try {
             // sjekker at fromStopId og toStopId ikke er tomme
