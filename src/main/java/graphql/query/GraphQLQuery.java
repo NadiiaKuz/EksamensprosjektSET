@@ -38,18 +38,17 @@ public class GraphQLQuery {
                 if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
                     // forespørsel med kun start- og sluttstopp parametere
                     query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
-                } else {
-                    if (queryObject.getTransportMode() != null) {
-                        // forespørsel med fra-til, og (1) transporttype som parametere
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getTransportMode());
-                    }
+                }
+                // forespørsel med fra-til, og (1) transporttype som parametere
+                else if (queryObject.getTransportMode() != null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                            queryObject.getTransportMode());
+                }
 
-                    else if (queryObject.getTransportModes() != null) {
-                        // forespørsel med fra-til, og flere transporttyper som parametere
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getTransportModes());
-                    }
+                // forespørsel med fra-til, og flere transporttyper som parametere
+                else if (queryObject.getTransportModes() != null) {
+                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                            queryObject.getTransportModes());
                 }
             }
             // bruker har spesifisert tid og/eller dato
@@ -112,9 +111,6 @@ public class GraphQLQuery {
     }
 
 
-
-
-
     public String getQuery(int fromStop, int toStop) {
         OffsetDateTime dateTime = OffsetDateTime.now();
         String dateTimeString = dateTime.toString();
@@ -132,26 +128,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }
@@ -176,26 +169,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }
@@ -222,26 +212,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }
@@ -267,26 +254,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }
@@ -315,26 +299,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }
@@ -363,26 +344,23 @@ public class GraphQLQuery {
                       expectedEndTime
                       duration
                       legs {
+                        mode
                         distance
                         line {
                           name
                           publicCode
                           transportMode
-                          operator {
-                            id
+                          authority {
+                            name
                           }
                         }
                       }
                     }
                     fromPlace {
                       name
-                      longitude
-                      latitude
                     }
                     toPlace {
                       name
-                      longitude
-                      latitude
                     }
                   }
                 }

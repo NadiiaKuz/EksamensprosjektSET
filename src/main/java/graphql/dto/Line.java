@@ -4,6 +4,6 @@ public class Line {
 
     public String publicCode;
     public String transportMode;
-    public Operator operator;
+    public Authority authority;
 
 }

@@ -5,5 +5,6 @@ public class Leg {
     public String mode;
     public double distance;
     public Line line;
+    public FromPlace fromPlace;
 
 }
