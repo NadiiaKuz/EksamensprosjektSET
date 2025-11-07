@@ -46,15 +46,18 @@
     <div v-if="error" class="error">{{ error }}</div>
     <div v-if="results.length">
       <ul>
-        <li v-for="result in results" :key="result.routeId" class="route-info">
-          <h3>Transporttype: {{ result.transportType }}</h3>
-          <p><strong>Operatør:</strong> {{ result.operatorName }}</p>
-          <p><strong>Startstopp:</strong> {{ result.startStop }}</p>
-          <p><strong>Sluttstopp:</strong> {{ result.endStop }}</p>
-          <p><strong>Start tid:</strong> {{ result.startTime }}</p>
-          <p><strong>Slutt tid</strong> {{ result.endTime }}</p>
-          <p><strong>Varighet:</strong> {{ result.duration }} sekunder</p>
-          <p><strong>Rutekode:</strong>  {{ result.publicCode }}</p>
+        <li v-for="(trip, index) in results" :key="index">
+          <h3>Transporttype: {{ trip.transportMode }}</h3>
+          <p><strong>Fra: </strong> {{ trip.startStop }}</p>
+          <p><strong>Til: </strong> {{ trip.endStop }}</p>
+          <p><strong>Transportlinje: </strong> {{ trip.routeName }}</p>
+          <p><strong>Transportkode: </strong> {{ trip.publicCode }}</p>
+          <p><strong>Operatør: </strong> {{ trip.authorityName }}</p>
+          <p><strong>Start tid: </strong> {{ trip.startTime }}</p>
+          <p><strong>Slutt tid: </strong> {{ trip.endTime }}</p>
+          <p><strong>Overall varighet: </strong> {{ trip.duration }} sekunder</p>
+          <p><strong>Varighet: </strong> {{ trip.legDuration }} sekunder</p>
+
         </li>
       </ul>
     </div>
@@ -84,10 +87,11 @@ app.component("search-page", {
 
       axios.post('/api/search', { start: startStop, end: endStop, transportType: transportTypes })
           .then(response => {
+            console.log(transportTypes)
             console.log(response.data);
-
             if (Array.isArray(response.data) && response.data.length > 0) {
               this.results = response.data;
+              this.error = null;
             } else {
               this.results = [];
               this.error = 'Fant ingen reisedata';
@@ -99,20 +103,6 @@ app.component("search-page", {
             this.error = 'En feil oppstod: ' + error.message;
             this.results = [];
           });
-
-
-            // for debugging
-            //console.log(response.data);
-            // Tildeler data til results hvis alt fungerer korrekt
-            //this.results = response.data;
-            // Nullstiller error hvis forespørselen er vellykket
-            //this.error = null;
-         // })
-         // .catch(error => {
-            // Logger feilmeldingen i konsollen for debugging
-          //  console.error(error);
-            // this.error = 'En feil oppstod: ' + error.message;
-          //})
     }
   }
 });

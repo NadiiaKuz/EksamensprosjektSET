@@ -116,13 +116,17 @@ public class GraphQLController {
         }
 
         // bruker "custom" tid, dette for å teste siden er ikke lagt inn inputfelt for tid ennå
-        OffsetDateTime dTime = OffsetDateTime.parse("2025-11-06T14:00:00.402+01:00");
+        OffsetDateTime dTime = OffsetDateTime.parse("2025-11-07T14:00:00.402+01:00");
         QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, dTime, formattedTransportModes);
 
-        List<TripPattern> response = graphQLRepository.getTransportRoutes(query);
+        List<TripPattern> response = graphQLRepository.getTransportRoutes(query); // behold, resten under før try er tester
+
+        ArrayList<Map<String, Object>> test = graphQLRepository.formatTripPatterns(response);
+        System.out.println("Controller test tripDetails: " + test);
         try {
             if (response != null) {
-                ArrayList<Map<String, Object>> tripDetails = graphQLRepository.formatTripPatterns(response, query);
+                ArrayList<Map<String, Object>> tripDetails = graphQLRepository.formatTripPatterns(response);
+                System.out.println("Controller test tripDetails: " + tripDetails);
                 context.json(tripDetails);
             }
         } catch (Exception e) {

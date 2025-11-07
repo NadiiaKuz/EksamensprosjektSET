@@ -133,18 +133,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }
@@ -174,18 +173,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }
@@ -217,18 +215,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }
@@ -259,18 +256,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }
@@ -304,18 +300,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }
@@ -349,18 +344,17 @@ public class GraphQLQuery {
                         line {
                           name
                           publicCode
-                          transportMode
                           authority {
                             name
                           }
                         }
+                        fromPlace {
+                          name
+                        }
+                        toPlace {
+                          name
+                        }
                       }
-                    }
-                    fromPlace {
-                      name
-                    }
-                    toPlace {
-                      name
                     }
                   }
                 }

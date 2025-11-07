@@ -1,16 +1,12 @@
 package org.gruppe4.repository;
 import graphql.Service.EnturResponseService;
 import graphql.client.GraphQLClient;
-import graphql.dto.EnturResponse;
-import graphql.dto.Trip;
-import graphql.query.GraphQLQuery;
-import graphql.query.QueryObject;
+import graphql.dto.*;
+import graphql.query.*;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import graphql.dto.EnturResponse;
-import graphql.dto.TripPattern;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +98,6 @@ public class GraphQLRepository {
         if (response != null) {
             if (response.data.trip.tripPatterns != null) {
                 allTrips = response.data.trip.tripPatterns;
-
             } else
                 return null;
         } else
@@ -112,26 +107,34 @@ public class GraphQLRepository {
     }
 
     @NotNull
-    public ArrayList<Map<String, Object>> formatTripPatterns(List<TripPattern> response, QueryObject query) {
+    public ArrayList<Map<String, Object>> formatTripPatterns(List<TripPattern> response) {
         ArrayList<Map<String, Object>> formattedTrips = new ArrayList<>();
-
-        //TripPattern tripP = response.data.trip.tripPatterns.get(0)
 
         // Henter ut all reiseinfo fra hver rute og lagrer i eget hashmap
         for (TripPattern tripPattern : response) {
-            Map<String, Object> trip = new HashMap<>();
-            trip.put("startStop", query.getFromStop());
-            trip.put("endStop", query.getToStop());
-            trip.put("operatorName", tripPattern.legs.get(0).line.operator.id);
-            trip.put("publicCode", tripPattern.legs.get(0).line.publicCode);
-            trip.put("transportMode", tripPattern.legs.get(0).line.transportMode);
-            trip.put("startTime", tripPattern.aimedStartTime);
-            trip.put("endTime", tripPattern.aimedEndTime);
-            trip.put("duration", tripPattern.duration);
 
-            // Legger hashmapen i sitt eget indeks i ArrayList-en
-            formattedTrips.add(trip);
+            for (int i = 0; i < tripPattern.legs.size(); i++) {
+                System.out.println("Legs size: " + tripPattern.legs.size());
+                Map<String, Object> trip = new HashMap<>();
+
+                trip.put("transportMode", tripPattern.legs.get(i).mode);
+                trip.put("duration", tripPattern.duration);
+                if (tripPattern.legs.get(i).line != null) {
+                    trip.put("routeName", tripPattern.legs.get(i).line.name);
+                    trip.put("authorityName", tripPattern.legs.get(i).line.authority.name);
+                    trip.put("publicCode", tripPattern.legs.get(i).line.publicCode);
+                }
+                trip.put("startStop", tripPattern.legs.get(i).fromPlace.name);
+                trip.put("endStop", tripPattern.legs.get(i).toPlace.name);
+                trip.put("startTime", tripPattern.aimedStartTime);
+                trip.put("endTime", tripPattern.aimedEndTime);
+                trip.put("legDuration", tripPattern.legs.get(i).duration);
+
+                // Legger hashmap-en i sitt eget indeks i ArrayList-en
+                formattedTrips.add(trip);
+            }
         }
+        System.out.println("formatted trips: " + formattedTrips);
         return formattedTrips;
     }
 }
