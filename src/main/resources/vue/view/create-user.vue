@@ -1,13 +1,16 @@
 <template id="create-user-template">
   <form action="" method="post">
     <h1>Opprett ny bruker</h1>
-    <label for="name">Navn:
-      <input type="text" id="name" required>
+    <label for="firstName" >Fornavn*:
+      <input type="text" id="firstName" placeholder="Kari*" maxlength="45" pattern="[A-Za-zæøåÆØÅ]{2,}"required>
+    </label>
+    <label for="lastName">Etternavn:
+      <input type="text" id="lastName" placeholder="Nordmann" maxlength="45" pattern="[A-Za-zæøåÆØÅ]{2,}">
     </label>
 
 
-    <label for="mail">E-postadresse:
-      <input type="email" id="mail" required>
+    <label for="mail">E-postadresse*:
+      <input type="email" id="mail" placeholder="Kari.Nordmann@hiof.no" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required>
     </label>
 
 
