@@ -1,8 +1,11 @@
 <template id="create-user-template">
   <form action="" method="post">
     <h1>Opprett ny bruker</h1>
-    <label for="name">Navn:
-      <input type="text" id="name" required>
+    <label for="firstName">Fornavn:
+      <input type="text" id="firstName" required>
+    </label>
+    <label for="lastName">Etternavn:
+      <input type="text" id="lastName" required>
     </label>
 
 
