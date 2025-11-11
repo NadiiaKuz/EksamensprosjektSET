@@ -31,6 +31,7 @@ public class Application {
             return;
         }
 
+        // Henter data fra en fil
         String url = properties.getProperty("db.url");
         String user = properties.getProperty("db.user");
         String password = properties.getProperty("db.password");
@@ -58,5 +59,6 @@ public class Application {
         app.post("/api/users", context -> usersController.createUser(context));
 
         app.get("/", new VueComponent("search-page"));
+        app.get("/create-user", new VueComponent("create-user"));
     }
 }
