@@ -116,8 +116,8 @@ public class GraphQLController {
         }
 
         // bruker "custom" tid, dette for å teste siden er ikke lagt inn inputfelt for tid ennå
-        OffsetDateTime dTime = OffsetDateTime.parse("2025-11-07T14:00:00.402+01:00");
-        QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, dTime, formattedTransportModes);
+        //OffsetDateTime dTime = OffsetDateTime.parse("2025-11-07T14:00:00.402+01:00");
+        QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, formattedTransportModes);
 
         List<TripPattern> response = graphQLRepository.getTransportRoutes(query); // behold, resten under før try er tester
 

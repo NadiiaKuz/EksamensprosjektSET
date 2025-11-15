@@ -201,7 +201,7 @@ public class GraphQLQuery {
                     from: {place: "NSR:StopPlace:%d"}
                     to: {place: "NSR:StopPlace:%d"}
                     dateTime: "%s"
-                    modes: {transportModes: {%s}}
+                    modes: {transportModes: {transportMode: %s}}
                   ) {
                     tripPatterns {
                       aimedStartTime

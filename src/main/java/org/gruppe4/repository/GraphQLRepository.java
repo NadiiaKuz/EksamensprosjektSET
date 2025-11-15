@@ -78,19 +78,10 @@ public class GraphQLRepository {
         GraphQLQuery queryBuilder = new GraphQLQuery(queryObject);
         String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
 
-        System.out.println("TESTT 1 queryObject: " + queryObject.getDateTime());
-       // System.out.println("TESTT 2 queryObject, 1 tType: " + queryObject.getTransportMode());
-        System.out.println("TESTT 2 queryObject: " + queryObject.getTransportModes());
-        System.out.println(queryObject.transportModes);
-
-        // Tester at queries blir laget riktig
-        System.out.println("TESTT 3 getQueryBasedOnProvidedParameters: " + body);
-
         String jsonResponse = client.sendGraphQLRequest(body);
 
-        System.out.println();
-        System.out.println("Repository test jsonResponse: " + jsonResponse);
-        System.out.println();
+        System.out.println("body : " + body);
+        System.out.println("jsonResponse : " + jsonResponse);
 
         EnturResponse response = responseService.getEnturResponse(jsonResponse);
         List<TripPattern> allTrips;
@@ -114,7 +105,6 @@ public class GraphQLRepository {
         for (TripPattern tripPattern : response) {
 
             for (int i = 0; i < tripPattern.legs.size(); i++) {
-                System.out.println("Legs size: " + tripPattern.legs.size());
                 Map<String, Object> trip = new HashMap<>();
 
                 trip.put("transportMode", tripPattern.legs.get(i).mode);
