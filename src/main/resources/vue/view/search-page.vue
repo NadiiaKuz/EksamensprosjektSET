@@ -7,6 +7,9 @@
     <label for="end" id="endLabel">Til:
       <input type="text" id="end" name="end" placeholder="Hvor ønsker du å reise til?" required>
     </label>
+    <label for="datetime" id="datetimeLabel">Tid:
+      <input type="datetime-local" id="datetime" name="datetime">
+    </label>
 
     <!--HAMBURGER-->
     <section id="filtering">
@@ -84,8 +87,9 @@ app.component("search-page", {
       const endStop = document.querySelector("#end").value;
       const transportTypes = Array.from(document.querySelectorAll("input[name='transportType']:checked"))
           .map(input => input.value);
+      const dateTime = document.querySelector("#datetime").value;
 
-      axios.post('/api/search', { start: startStop, end: endStop, transportType: transportTypes })
+      axios.post('/api/search', { start: startStop, end: endStop, transportType: transportTypes, datetime: dateTime })
           .then(response => {
             console.log(transportTypes)
             console.log(response.data);

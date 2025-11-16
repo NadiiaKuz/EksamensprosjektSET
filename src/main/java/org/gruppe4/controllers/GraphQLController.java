@@ -40,37 +40,29 @@ public class GraphQLController {
         String viaStopId = context.formParam("viaStop");
 
         // input=date og input=time. Vurderer input=datetime istedenfor, men det kommer senere
-        String dateString = context.formParam("date");
-        String timeString = context.formParam("time");
+        // String dateString = context.formParam("date");
+        // String timeString = context.formParam("time");
+        String dateTimeString = (String) jsonMap.get("datetime");
 
         int toStopIdInt = 0;
         int fromStopIdInt = 0;
         Integer viaStopIdInt = 0;
 
         ArrayList<String> formattedTransportModes = new ArrayList<>();
-        // test
-        System.out.println("Controller test transportModes: " + transportModes);
-        for (String mode : transportModes) {
-            System.out.println(mode);
-        }
 
         if (transportModes != null && !transportModes.isEmpty()) {
             for ( int i = 0; i < transportModes.size(); i++ ) {
                 String mode = transportModes.get(i);
                 try {
                     // Enum conversion and processing
-                    System.out.println("Controller test transportModes.size(): " + transportModes.size());
                     String transport = TransportType.valueOf(mode).getMode();
                     formattedTransportModes.add(i, transport);
-                    System.out.println("Controller test TransportType.valueOf() for-loop: " + TransportType.valueOf(mode));
-                    System.out.println("Controller test formattedTransportModes for-loop: " + transport);
                 } catch (IllegalArgumentException e) {
-                    // Log en spesifik feilmelding hvis den typene er ukjent/genererer en feil
+                    // Logg en spesifik feilmelding hvis typen er ukjent/genererer en feil
                     System.err.println("Ukjent transport type: " + mode);
                 }
             }
         }
-        System.out.println("Controller test formattedTransportModes final result: " + formattedTransportModes);
 
         try {
             // sjekker at fromStopId og toStopId ikke er tomme
@@ -92,41 +84,28 @@ public class GraphQLController {
         // formatene brukes til LocalDate's parse metode
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime dateTime;
+        LocalDateTime dateTime = null;
 
         // LocalDateTime skal parses til OffsetDateTime, Entur bruker dette tidsformatet
         OffsetDateTime offsetDateTime = null;
 
         // dersom bruker har valgt f.eks kun tid, så formateres det med nåværende dato
-        if (dateString != null || timeString != null) {
-            if (dateString != null & !dateString.isEmpty()) {
-                date = LocalDate.now();
+        if (dateTimeString != null) {
+            if (dateTimeString.isEmpty()) {
+                dateTime = LocalDateTime.now();
             } else {
-                date = LocalDate.parse(dateString, timeFormatter);
+                dateTime = LocalDateTime.parse(dateTimeString);
             }
-
-            if (timeString.isEmpty()) {
-                time = LocalTime.now();
-            } else {
-                time = LocalTime.parse(timeString, dateFormatter);
-            }
-
-            dateTime = LocalDateTime.of(date, time);
             offsetDateTime = OffsetDateTime.of(dateTime, ZoneOffset.ofHours(1));
         }
 
-        // bruker "custom" tid, dette for å teste siden er ikke lagt inn inputfelt for tid ennå
-        //OffsetDateTime dTime = OffsetDateTime.parse("2025-11-07T14:00:00.402+01:00");
         QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, formattedTransportModes);
 
-        List<TripPattern> response = graphQLRepository.getTransportRoutes(query); // behold, resten under før try er tester
+        List<TripPattern> response = graphQLRepository.getTransportRoutes(query);
 
-        ArrayList<Map<String, Object>> test = graphQLRepository.formatTripPatterns(response);
-        System.out.println("Controller test tripDetails: " + test);
         try {
             if (response != null) {
                 ArrayList<Map<String, Object>> tripDetails = graphQLRepository.formatTripPatterns(response);
-                System.out.println("Controller test tripDetails: " + tripDetails);
                 context.json(tripDetails);
             }
         } catch (Exception e) {

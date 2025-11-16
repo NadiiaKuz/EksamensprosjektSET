@@ -80,9 +80,6 @@ public class GraphQLRepository {
 
         String jsonResponse = client.sendGraphQLRequest(body);
 
-        System.out.println("body : " + body);
-        System.out.println("jsonResponse : " + jsonResponse);
-
         EnturResponse response = responseService.getEnturResponse(jsonResponse);
         List<TripPattern> allTrips;
 
@@ -124,7 +121,6 @@ public class GraphQLRepository {
                 formattedTrips.add(trip);
             }
         }
-        System.out.println("formatted trips: " + formattedTrips);
         return formattedTrips;
     }
 }
