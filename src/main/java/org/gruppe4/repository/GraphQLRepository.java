@@ -6,7 +6,6 @@ import graphql.query.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,48 +24,23 @@ public class GraphQLRepository {
         // Lager Query objekter med toStop og fromStop + andre parametere dersom brukeren har satt inn mer info
         QueryObject queryObject;
         if (viaStopIdInt == null) {
-            if (offsetDateTime == null) {
-                if (transportModes.isEmpty()) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt);
-                } else {
-                    if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
-                    } else {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes.getFirst());
-                    }
-                }
-                // tid/dato er satt inn
+            if (transportModes.isEmpty()) {
+                queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
             } else {
-                if (transportModes.isEmpty()) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
+                if (transportModes.size() > 1) {
+                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
                 } else {
-                    if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
-                    } else {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
-                    }
+                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
                 }
             }
         } else {
-            if (offsetDateTime == null) {
-                if (transportModes.isEmpty()) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt);
-                } else {
-                    if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes);
-                    } else {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, transportModes.getFirst());
-                    }
-                }
+            if (transportModes.isEmpty()) {
+                queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
             } else {
-                if (transportModes.isEmpty()) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
+                if (transportModes.size() > 1) {
+                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
                 } else {
-                    if (transportModes.size() > 1) {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
-                    } else {
-                        queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
-                    }
+                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
                 }
             }
         }
@@ -90,11 +64,11 @@ public class GraphQLRepository {
                 return null;
         } else
             return null;
-        // returnerer liste av alle tilgjengelige ruter
+        // returnerer liste av alle tilgjengelige ruter (eller null ved feil)
         return allTrips;
     }
 
-    @NotNull
+
     public ArrayList<Map<String, Object>> formatTripPatterns(List<TripPattern> response) {
         ArrayList<Map<String, Object>> formattedTrips = new ArrayList<>();
 

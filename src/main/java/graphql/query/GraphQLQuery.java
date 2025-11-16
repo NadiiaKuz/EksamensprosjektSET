@@ -30,126 +30,40 @@ public class GraphQLQuery {
 
         // vanlige fra-til forespørsler (uten viaStopp variabel)
         if (queryObject.getViaStop() == null) {
-
-            // brukeren har ikke spesifisert tid/dato, da default-er Entur til nåværende tidspunkt
-            if (queryObject.getDateTime() == null) {
-
-                // bruker har ikke valgt transporttype
-                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
-                    // forespørsel med kun start- og sluttstopp parametere
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop());
-                }
-                // forespørsel med fra-til, og (1) transporttype som parametere
-                else if (queryObject.getTransportMode() != null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                            queryObject.getTransportMode());
-                }
-
-                // forespørsel med fra-til, og flere transporttyper som parametere
-                else if (queryObject.getTransportModes() != null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                            queryObject.getTransportModes());
-                }
+            if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
             }
-            // bruker har spesifisert tid og/eller dato
-            else {
-                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getDateTime());
-                }
-                else {
-                    if (queryObject.getTransportMode() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getDateTime(), queryObject.getTransportMode());
-                    }
+            else if (queryObject.getTransportMode() != null) {
+                // med 1 transporttype
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                        queryObject.getDateTime(), queryObject.getTransportMode());
+            }
 
-                    else if (queryObject.getTransportModes() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getDateTime(), queryObject.getTransportModes());
-                    }
-                }
+            else if (queryObject.getTransportModes() != null) {
+                // med flere transporttyper
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                        queryObject.getDateTime(), queryObject.getTransportModes());
             }
         }
         // med viaStop variabelen
         else {
-            if (queryObject.getDateTime() == null) {
-                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(), queryObject.getViaStop());
-                } else {
-                    if (queryObject.getTransportMode() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getViaStop(), queryObject.getTransportMode());
-                    }
-
-                    else if (queryObject.getTransportModes() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getViaStop(), queryObject.getTransportModes());
-                    }
-                }
+            if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                        queryObject.getViaStop(), queryObject.getDateTime());
             }
-            else {
-                if (queryObject.getTransportMode() == null && queryObject.getTransportModes() == null) {
-                    query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                            queryObject.getViaStop(), queryObject.getDateTime());
+            else if (queryObject.getTransportMode() != null) {
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                        queryObject.getViaStop(), queryObject.getDateTime(),
+                        queryObject.getTransportMode());
                 }
-                else {
-                    if (queryObject.getTransportMode() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getViaStop(), queryObject.getDateTime(),
-                                queryObject.getTransportMode());
-                    }
 
-                    else if (queryObject.getTransportModes() != null) {
-                        query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
-                                queryObject.getViaStop(), queryObject.getDateTime(),
-                                queryObject.getTransportModes());
-                    }
-                }
+            else if (queryObject.getTransportModes() != null) {
+                query = getQuery(queryObject.getToStop(), queryObject.getFromStop(),
+                        queryObject.getViaStop(), queryObject.getDateTime(),
+                        queryObject.getTransportModes());
             }
         }
-
         return query;
-    }
-
-
-    public String getQuery(int fromStop, int toStop) {
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String graphQLQuery = String.format("""
-                  {
-                  trip(
-                    from: {place:"NSR:StopPlace:%d"}
-                    to: {place:"NSR:StopPlace:%d"}
-                    dateTime: "%s"
-                  ) {
-                    tripPatterns {
-                      aimedStartTime
-                      aimedEndTime
-                      expectedStartTime
-                      expectedEndTime
-                      duration
-                      legs {
-                        mode
-                        distance
-                        line {
-                          name
-                          publicCode
-                          authority {
-                            name
-                          }
-                        }
-                        fromPlace {
-                          name
-                        }
-                        toPlace {
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString);
-
-        return returnJsonQuery(graphQLQuery);
     }
 
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime) {
@@ -192,48 +106,6 @@ public class GraphQLQuery {
         return returnJsonQuery(graphQLQuery);
     }
 
-    public String getQuery(int fromStop, int toStop, String transportMode) {
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String graphQLQuery = String.format("""
-                {
-                  trip(
-                    from: {place: "NSR:StopPlace:%d"}
-                    to: {place: "NSR:StopPlace:%d"}
-                    dateTime: "%s"
-                    modes: {transportModes: {transportMode: %s}}
-                  ) {
-                    tripPatterns {
-                      aimedStartTime
-                      aimedEndTime
-                      expectedStartTime
-                      expectedEndTime
-                      duration
-                      legs {
-                        mode
-                        distance
-                        line {
-                          name
-                          publicCode
-                          authority {
-                            name
-                          }
-                        }
-                        fromPlace {
-                          name
-                        }
-                        toPlace {
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString, transportMode);
-
-        return returnJsonQuery(graphQLQuery);
-    }
-
     public String getQuery(int fromStop, int toStop, OffsetDateTime dateTime, String transportMode) {
         String dateTimeString = dateTime.toString();
         String graphQLQuery = String.format("""
@@ -271,50 +143,6 @@ public class GraphQLQuery {
                   }
                 }
                 """, fromStop, toStop, dateTimeString, transportMode);
-
-        return returnJsonQuery(graphQLQuery);
-    }
-
-    public String getQuery(int fromStop, int toStop, ArrayList<String> transportModes) {
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String tModes = String.join("}, {transportMode: ", transportModes);
-
-        String graphQLQuery = String.format("""
-                {
-                  trip(
-                    from: {place: "NSR:StopPlace:%s"}
-                    to: {place: "NSR:StopPlace:%s"}
-                    dateTime: "%s"
-                    modes: {transportModes: [{transportMode: %s}]}
-                  ) {
-                    tripPatterns {
-                      aimedStartTime
-                      aimedEndTime
-                      expectedStartTime
-                      expectedEndTime
-                      duration
-                      legs {
-                        mode
-                        distance
-                        line {
-                          name
-                          publicCode
-                          authority {
-                            name
-                          }
-                        }
-                        fromPlace {
-                          name
-                        }
-                        toPlace {
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString, tModes);
 
         return returnJsonQuery(graphQLQuery);
     }
@@ -365,60 +193,6 @@ public class GraphQLQuery {
 
     // alt herfra blir "viaTrip" queries, altså en rute med et planlagt byttepunkt
 
-    public String getQuery(int fromStop, int toStop, int viaStop) {
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String query = String.format("""
-                {
-                  viaTrip(
-                    from: {place: "NSR:StopPlace:%s"}
-                    to: {place: "NSR:StopPlace:%s"}
-                    searchWindow: "PT2H"
-                    dateTime: "%s"
-                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
-                  ) {
-                    routingErrors {
-                      description
-                      inputField
-                      code
-                    }
-                    tripPatternsPerSegment {
-                      tripPatterns {
-                        aimedStartTime
-                        aimedEndTime
-                        expectedStartTime
-                        expectedEndTime
-                        duration
-                        legs {
-                          distance
-                          line {
-                            name
-                            publicCode
-                            transportMode
-                            operator {
-                              id
-                            }
-                          }
-                          fromPlace {
-                            name
-                          }
-                          toPlace {
-                            name
-                          }
-                        }
-                      }
-                    }
-                    tripPatternCombinations {
-                      from
-                      to
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString, viaStop);
-
-        return returnJsonQuery(query);
-    }
-
     public String getQuery(int fromStop, int toStop, int viaStop, OffsetDateTime dateTime) {
         String dateTimeString = dateTime.toString();
         String query = String.format("""
@@ -468,62 +242,6 @@ public class GraphQLQuery {
                   }
                 }
                 """, fromStop, toStop, dateTimeString, viaStop);
-
-        return returnJsonQuery(query);
-    }
-
-    public String getQuery(int fromStop, int toStop, int viaStop, String transportMode) {
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String query = String.format("""
-                {
-                  viaTrip(
-                    from: {place: "NSR:StopPlace:%s"}
-                    to: {place: "NSR:StopPlace:%s"}
-                    searchWindow: "PT2H"
-                    dateTime: "%s"
-                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
-                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]},
-                    {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
-                  ) {
-                    routingErrors {
-                      description
-                      inputField
-                      code
-                    }
-                    tripPatternsPerSegment {
-                      tripPatterns {
-                        aimedStartTime
-                        aimedEndTime
-                        expectedStartTime
-                        expectedEndTime
-                        duration
-                        legs {
-                          distance
-                          line {
-                            name
-                            publicCode
-                            transportMode
-                            operator {
-                              id
-                            }
-                          }
-                          fromPlace {
-                            name
-                          }
-                          toPlace {
-                            name
-                          }
-                        }
-                      }
-                    }
-                    tripPatternCombinations {
-                      from
-                      to
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString, viaStop, transportMode, transportMode);
 
         return returnJsonQuery(query);
     }
@@ -581,65 +299,6 @@ public class GraphQLQuery {
                   }
                 }
                 """, fromStop, toStop, dateTimeString, viaStop, transportMode, transportMode);
-
-        return returnJsonQuery(query);
-    }
-
-    public String getQuery(int fromStop, int toStop, int viaStop,
-                           ArrayList<String> transportModes) {
-
-        OffsetDateTime dateTime = OffsetDateTime.now();
-        String dateTimeString = dateTime.toString();
-        String tModes = String.join("}, {transportMode: ", transportModes);
-
-        String query = String.format("""
-                {
-                  viaTrip(
-                    from: {place: "NSR:StopPlace:%s"}
-                    to: {place: "NSR:StopPlace:%s"}
-                    searchWindow: "PT2H"
-                    dateTime: "%s"
-                    via: [{place: "NSR:StopPlace:%s", minSlack: "PT120S", maxSlack: "PT2H"}]
-                    segments: [{filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}, {filters: [{select: [{transportModes: [{transportMode: %s}]}]}]}]
-                  ) {
-                    routingErrors {
-                      description
-                      inputField
-                      code
-                    }
-                    tripPatternsPerSegment {
-                      tripPatterns {
-                        aimedStartTime
-                        aimedEndTime
-                        expectedStartTime
-                        expectedEndTime
-                        duration
-                        legs {
-                          distance
-                          line {
-                            name
-                            publicCode
-                            transportMode
-                            operator {
-                              id
-                            }
-                          }
-                          fromPlace {
-                            name
-                          }
-                          toPlace {
-                            name
-                          }
-                        }
-                      }
-                    }
-                    tripPatternCombinations {
-                      from
-                      to
-                    }
-                  }
-                }
-                """, fromStop, toStop, dateTimeString, viaStop, tModes, tModes);
 
         return returnJsonQuery(query);
     }

@@ -58,8 +58,7 @@
           <p><strong>Operatør: </strong> {{ trip.authorityName }}</p>
           <p><strong>Start tid: </strong> {{ trip.startTime }}</p>
           <p><strong>Slutt tid: </strong> {{ trip.endTime }}</p>
-          <p><strong>Overall varighet: </strong> {{ trip.duration }} sekunder</p>
-          <p><strong>Varighet: </strong> {{ trip.legDuration }} sekunder</p>
+          <p><strong>Varighet: </strong> {{ trip.duration / 60}} minutter</p>
 
         </li>
       </ul>

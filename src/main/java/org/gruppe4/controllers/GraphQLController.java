@@ -5,16 +5,13 @@ import graphql.query.QueryObject;
 import io.javalin.http.Context;
 import org.gruppe4.enums.TransportType;
 import org.gruppe4.repository.GraphQLRepository;
-import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +35,9 @@ public class GraphQLController {
         String toStopId = (String) jsonMap.get("end");
         ArrayList<String> transportModes = (ArrayList<String>) jsonMap.get("transportType");
         String viaStopId = context.formParam("viaStop");
-
-        // input=date og input=time. Vurderer input=datetime istedenfor, men det kommer senere
-        // String dateString = context.formParam("date");
-        // String timeString = context.formParam("time");
         String dateTimeString = (String) jsonMap.get("datetime");
 
+        // initialiserer variabler for Integer.parse()
         int toStopIdInt = 0;
         int fromStopIdInt = 0;
         Integer viaStopIdInt = 0;
@@ -58,7 +52,7 @@ public class GraphQLController {
                     String transport = TransportType.valueOf(mode).getMode();
                     formattedTransportModes.add(i, transport);
                 } catch (IllegalArgumentException e) {
-                    // Logg en spesifik feilmelding hvis typen er ukjent/genererer en feil
+                    // Produser og logg feilmelding hvis typen er ukjent/genererer en feil
                     System.err.println("Ukjent transport type: " + mode);
                 }
             }
@@ -67,7 +61,6 @@ public class GraphQLController {
         try {
             // sjekker at fromStopId og toStopId ikke er tomme
             if ((fromStopId != null && !fromStopId.isEmpty()) && (toStopId != null && !toStopId.isEmpty())) {
-                //context.result("Please enter a valid stop ID");
                 fromStopIdInt = Integer.parseInt(fromStopId);
                 toStopIdInt = Integer.parseInt(toStopId);
                 viaStopIdInt = null;
@@ -76,20 +69,17 @@ public class GraphQLController {
                     viaStopIdInt = Integer.parseInt(viaStopId);
             }
         } catch (IllegalArgumentException e) {
-            System.err.println("Ukjent fromStop: " + fromStopId);
+            System.err.println("Ukjent stopp!");
+            System.err.println("fromStop: " + fromStopId);
+            System.err.println("toStop: " + toStopId);
+            return;
         }
-        LocalDate date;
-        LocalTime time;
 
-        // formatene brukes til LocalDate's parse metode
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime dateTime = null;
+        LocalDateTime dateTime;
 
         // LocalDateTime skal parses til OffsetDateTime, Entur bruker dette tidsformatet
         OffsetDateTime offsetDateTime = null;
 
-        // dersom bruker har valgt f.eks kun tid, så formateres det med nåværende dato
         if (dateTimeString != null) {
             if (dateTimeString.isEmpty()) {
                 dateTime = LocalDateTime.now();
