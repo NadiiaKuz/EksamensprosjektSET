@@ -84,6 +84,8 @@ public class GraphQLQuery {
                       legs {
                         mode
                         distance
+                        aimedStartTime
+                        aimedEndTime
                         line {
                           name
                           publicCode
@@ -125,6 +127,8 @@ public class GraphQLQuery {
                       legs {
                         mode
                         distance
+                        aimedStartTime
+                        aimedEndTime
                         line {
                           name
                           publicCode
@@ -169,6 +173,8 @@ public class GraphQLQuery {
                       legs {
                         mode
                         distance
+                        aimedStartTime
+                        aimedEndTime
                         line {
                           name
                           publicCode
@@ -217,7 +223,10 @@ public class GraphQLQuery {
                         expectedEndTime
                         duration
                         legs {
+                          mode
                           distance
+                          aimedStartTime
+                          aimedEndTime
                           line {
                             name
                             publicCode
@@ -274,7 +283,10 @@ public class GraphQLQuery {
                         expectedEndTime
                         duration
                         legs {
+                          mode
                           distance
+                          aimedStartTime
+                          aimedEndTime
                           line {
                             name
                             publicCode
@@ -331,7 +343,10 @@ public class GraphQLQuery {
                         expectedEndTime
                         duration
                         legs {
+                          mode
                           distance
+                          aimedStartTime
+                          aimedEndTime
                           line {
                             name
                             publicCode

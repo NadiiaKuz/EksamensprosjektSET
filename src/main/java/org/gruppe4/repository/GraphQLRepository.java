@@ -47,7 +47,7 @@ public class GraphQLRepository {
         return queryObject;
     }
 
-    public List<TripPattern> getTransportRoutes(QueryObject queryObject) throws Exception {
+    public Trip getTransportRoutes(QueryObject queryObject) throws Exception {
         EnturResponseService responseService = new EnturResponseService();
         GraphQLQuery queryBuilder = new GraphQLQuery(queryObject);
         String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
@@ -55,11 +55,11 @@ public class GraphQLRepository {
         String jsonResponse = client.sendGraphQLRequest(body);
 
         EnturResponse response = responseService.getEnturResponse(jsonResponse);
-        List<TripPattern> allTrips;
+        Trip allTrips;
 
         if (response != null) {
             if (response.data.trip.tripPatterns != null) {
-                allTrips = response.data.trip.tripPatterns;
+                allTrips = response.data.trip;
             } else
                 return null;
         } else
@@ -69,30 +69,44 @@ public class GraphQLRepository {
     }
 
 
-    public ArrayList<Map<String, Object>> formatTripPatterns(List<TripPattern> response) {
+    public ArrayList<Map<String, Object>> formatTripPatterns(Trip response) {
         ArrayList<Map<String, Object>> formattedTrips = new ArrayList<>();
 
         // Henter ut all reiseinfo fra hver rute og lagrer i eget hashmap
-        for (TripPattern tripPattern : response) {
+        for (TripPattern tripPattern : response.tripPatterns) {
 
             for (int i = 0; i < tripPattern.legs.size(); i++) {
-                Map<String, Object> trip = new HashMap<>();
+                Map<String, Object> data = new HashMap<>();
 
-                trip.put("transportMode", tripPattern.legs.get(i).mode);
-                trip.put("duration", tripPattern.duration);
+                data.put("transportMode", tripPattern.legs.get(i).mode);
+                data.put("duration", tripPattern.duration / 60);
                 if (tripPattern.legs.get(i).line != null) {
-                    trip.put("routeName", tripPattern.legs.get(i).line.name);
-                    trip.put("authorityName", tripPattern.legs.get(i).line.authority.name);
-                    trip.put("publicCode", tripPattern.legs.get(i).line.publicCode);
+                    data.put("routeName", tripPattern.legs.get(i).line.name);
+                    data.put("authorityName", tripPattern.legs.get(i).line.authority.name);
+                    data.put("publicCode", tripPattern.legs.get(i).line.publicCode);
                 }
-                trip.put("startStop", tripPattern.legs.get(i).fromPlace.name);
-                trip.put("endStop", tripPattern.legs.get(i).toPlace.name);
-                trip.put("startTime", tripPattern.aimedStartTime);
-                trip.put("endTime", tripPattern.aimedEndTime);
-                trip.put("legDuration", tripPattern.legs.get(i).duration);
+
+                data.put("startStop", tripPattern.legs.get(i).fromPlace.name);
+                data.put("endStop", tripPattern.legs.get(i).toPlace.name);
+
+                data.put("startTime", tripPattern.aimedStartTime.substring(0, 10)
+                                    + " " + tripPattern.aimedStartTime.substring(11, 19));
+
+                data.put("endTime", tripPattern.aimedEndTime.substring(0, 10)
+                                + " " + tripPattern.aimedEndTime.substring(11, 19));
+
+                data.put("legStartTime", tripPattern.legs.get(i).aimedStartTime.substring(0, 10)
+                        + " " + tripPattern.legs.get(i).aimedStartTime.substring(11, 19));
+
+                data.put("legEndTime", tripPattern.legs.get(i).aimedEndTime.substring(0, 10)
+                        + " " + tripPattern.legs.get(i).aimedEndTime.substring(11, 19));
+
+                data.put("legDuration", tripPattern.legs.get(i).duration / 60);
+
+                data.put("legSize", tripPattern.legs.size());
 
                 // Legger hashmap-en i sitt eget indeks i ArrayList-en
-                formattedTrips.add(trip);
+                formattedTrips.add(data);
             }
         }
         return formattedTrips;

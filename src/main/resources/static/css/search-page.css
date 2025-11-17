@@ -150,7 +150,7 @@ main {
     gap: 1rem;
     padding: 1rem;
     padding-top: 3rem;
-    padding-bottom: 8rem;
+    padding-bottom: 6rem;
     background-color: #f2e8cc;
     color: #236130;
     h2 {
@@ -159,4 +159,17 @@ main {
     .result {
         border: 2px solid black;
     }
+
+    article {
+        padding-bottom: 2rem;
+    }
+}
+
+#single-leg-trip {
+    display: flex;
+    flex-direction: column;
+}
+
+.multiple-leg-trip {
+    display: flex;
 }

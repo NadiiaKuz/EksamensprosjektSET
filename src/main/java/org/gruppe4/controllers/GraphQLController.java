@@ -91,7 +91,7 @@ public class GraphQLController {
 
         QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, formattedTransportModes);
 
-        List<TripPattern> response = graphQLRepository.getTransportRoutes(query);
+        Trip response = graphQLRepository.getTransportRoutes(query);
 
         try {
             if (response != null) {
