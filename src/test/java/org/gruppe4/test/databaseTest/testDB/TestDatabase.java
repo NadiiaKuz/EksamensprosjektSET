@@ -75,17 +75,22 @@ public abstract class TestDatabase {
 
     //Metode for å legge userType inn i databasen
     public void insertIntoUserTypes(String name) throws Exception{
+        //Lager en string med en sql insert statement, hvor VALUES er placeholder (?)
         String sql = "INSERT INTO UserTypes (userType) VALUES (?)";
-
+        //Setter placeholder verdien med try-with-resources.
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            //Oppretter en enum-konstant med navnet fra argumentet til metoden (name)
             UserType userType = UserType.valueOf(name);
+            //Setter placeholderen i index 1, altså det første ? til å være navnet på enum-konstanten
             preparedStatement.setString(1, userType.name());
+            //Utfører sql insert
             preparedStatement.executeUpdate();
         }
     }
 
     //Metode for å legge roleType inn i databasen
     public void insertIntoRoles(String name) throws Exception{
+
         String sql = "INSERT INTO Roles (roleType) VALUES (?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -95,6 +100,7 @@ public abstract class TestDatabase {
         }
     }
 
+    //Metode for å legge en User inn i databasen
     public void insertIntoUsers(String firstName, String lastName, String email, String password, String favoriteRoute,
                                 int UserTypes_idUserType, int Roles_idRole) throws Exception{
         String sql = "INSERT INTO Users (firstName, lastName, email, password, favoriteRoute," +
