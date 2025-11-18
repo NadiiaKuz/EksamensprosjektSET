@@ -51,15 +51,8 @@
         <article v-for="(trip, index) in results" :key="index">
 
           <div v-if="trip.legSize > 1">
-            <div v-if="trip.transportMode === 'foot'">
-              <h3>{{ index + 1 }}. Transporttype: {{ trip.transportMode }}</h3>
-              <p><strong>Fra: </strong> {{ trip.startStop }}</p>
-              <p><strong>Til: </strong> {{ trip.endStop }}</p>
-              <p><strong>Start tid: </strong> {{ trip.legStartTime }}</p>
-              <p><strong>Slutt tid: </strong> {{ trip.legEndTime }}</p>
-            </div>
-            <div v-else>
-              <h3>{{ index + 1 }}. Transporttype: {{ trip.transportMode }}</h3>
+            <div v-if="trip.transportMode !== 'foot'">
+              <h3>Transporttype: {{ trip.transportMode }}</h3>
               <p><strong>Fra: </strong> {{ trip.startStop }}</p>
               <p><strong>Til: </strong> {{ trip.endStop }}</p>
               <p><strong>Transportlinje: </strong> {{ trip.routeName }}</p>
@@ -79,7 +72,7 @@
             <p><strong>Operatør: </strong> {{ trip.authorityName }}</p>
             <p><strong>Start tid: </strong> {{ trip.startTime }}</p>
             <p><strong>Slutt tid: </strong> {{ trip.endTime }}</p>
-            <p><strong>Varighet: </strong> {{ trip.duration }} minutter</p>
+            <p><strong>Varighet: </strong> {{ trip.legDuration }} minutter</p>
           </div>
       </article>
     </div>

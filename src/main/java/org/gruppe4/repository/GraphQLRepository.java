@@ -5,10 +5,7 @@ import graphql.dto.*;
 import graphql.query.*;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.lang.Object;
 
 public class GraphQLRepository {
@@ -75,39 +72,30 @@ public class GraphQLRepository {
         // Henter ut all reiseinfo fra hver rute og lagrer i eget hashmap
         for (TripPattern tripPattern : response.tripPatterns) {
 
-            for (int i = 0; i < tripPattern.legs.size(); i++) {
+            for (Leg leg : tripPattern.legs) {
                 Map<String, Object> data = new HashMap<>();
 
-                data.put("transportMode", tripPattern.legs.get(i).mode);
-                data.put("duration", tripPattern.duration / 60);
-                if (tripPattern.legs.get(i).line != null) {
-                    data.put("routeName", tripPattern.legs.get(i).line.name);
-                    data.put("authorityName", tripPattern.legs.get(i).line.authority.name);
-                    data.put("publicCode", tripPattern.legs.get(i).line.publicCode);
+                if (leg.line != null) {
+                    data.put("routeName", leg.line.name);
+                    data.put("authorityName", leg.line.authority.name);
+                    data.put("publicCode", leg.line.publicCode);
                 }
 
-                data.put("startStop", tripPattern.legs.get(i).fromPlace.name);
-                data.put("endStop", tripPattern.legs.get(i).toPlace.name);
-
-                data.put("startTime", tripPattern.aimedStartTime.substring(0, 10)
-                                    + " " + tripPattern.aimedStartTime.substring(11, 19));
-
-                data.put("endTime", tripPattern.aimedEndTime.substring(0, 10)
-                                + " " + tripPattern.aimedEndTime.substring(11, 19));
-
-                data.put("legStartTime", tripPattern.legs.get(i).aimedStartTime.substring(0, 10)
-                        + " " + tripPattern.legs.get(i).aimedStartTime.substring(11, 19));
-
-                data.put("legEndTime", tripPattern.legs.get(i).aimedEndTime.substring(0, 10)
-                        + " " + tripPattern.legs.get(i).aimedEndTime.substring(11, 19));
-
-                data.put("legDuration", tripPattern.legs.get(i).duration / 60);
-
+                data.put("transportMode", leg.mode);
+                data.put("duration", tripPattern.duration / 60);
+                data.put("startStop", leg.fromPlace.name);
+                data.put("endStop", leg.toPlace.name);
+                data.put("startTime", tripPattern.aimedStartTime.substring(11, 19));
+                data.put("endTime", tripPattern.aimedEndTime.substring(11, 19));
+                data.put("legStartTime", leg.aimedStartTime.substring(11, 19));
+                data.put("legEndTime", leg.aimedEndTime.substring(11, 19));
+                data.put("legDuration", leg.duration / 60);
                 data.put("legSize", tripPattern.legs.size());
 
-                // Legger hashmap-en i sitt eget indeks i ArrayList-en
+                // Legger hashmap-en i eget indeks i ArrayList-en
                 formattedTrips.add(data);
             }
+            System.out.println(Arrays.toString(tripPattern.legs.toArray()));
         }
         return formattedTrips;
     }
