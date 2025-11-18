@@ -31,7 +31,7 @@ public class UsersRepositoryIntegrationTests {
 
         // Tillater å senere kunne rulle tilbake data-endringer.
         connection.setAutoCommit(false);
-
+        //Kobler et UserRepository objekt opp med testdatabasen
         usersRepository = new UsersRepository(connection);
     }
 
