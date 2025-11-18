@@ -38,8 +38,8 @@ public class GraphQLController {
         String dateTimeString = (String) jsonMap.get("datetime");
 
         // initialiserer variabler for Integer.parse()
-        int toStopIdInt = 0;
         int fromStopIdInt = 0;
+        int toStopIdInt = 0;
         Integer viaStopIdInt = 0;
 
         ArrayList<String> formattedTransportModes = new ArrayList<>();
@@ -103,8 +103,7 @@ public class GraphQLController {
         }
     }
 
-    /* lages når deserialisering er på plass
+    /* for videre arbeid
     public void checkForDelayedTransports(Context context) {
-
     }*/
 }

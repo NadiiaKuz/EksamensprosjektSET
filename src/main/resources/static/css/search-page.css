@@ -161,15 +161,12 @@ main {
     }
 
     article {
-        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border: 2px solid #000000;
     }
-}
 
-#single-leg-trip {
-    display: flex;
-    flex-direction: column;
-}
-
-.multiple-leg-trip {
-    display: flex;
+    .leg-item {
+        padding: 1rem;
+    }
 }

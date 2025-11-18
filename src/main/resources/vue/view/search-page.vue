@@ -48,32 +48,40 @@
     <div class="result"></div>
     <div v-if="error" class="error">{{ error }}</div>
     <div v-if="results.length">
-        <article v-for="(trip, index) in results" :key="index">
+      <article v-for="(tripPattern, index) in results" :key="index">
 
-          <div v-if="trip.legSize > 1">
-            <div v-if="trip.transportMode !== 'foot'">
-              <h3>Transporttype: {{ trip.transportMode }}</h3>
-              <p><strong>Fra: </strong> {{ trip.startStop }}</p>
-              <p><strong>Til: </strong> {{ trip.endStop }}</p>
-              <p><strong>Transportlinje: </strong> {{ trip.routeName }}</p>
-              <p><strong>Transportkode: </strong> {{ trip.publicCode }}</p>
-              <p><strong>Operatør: </strong> {{ trip.authorityName }}</p>
-              <p><strong>Start tid: </strong> {{ trip.legStartTime }}</p>
-              <p><strong>Slutt tid: </strong> {{ trip.legEndTime }}</p>
-            </div>
+        <div v-if="tripPattern.legs.length > 1">
+          <!-- Hvis turen har flere "legs", vises start- og sluttid for hele turen -->
+          <h3>Reise Start: {{ tripPattern.aimedStartTime }}</h3>
+          <h3>Reise Slutt: {{ tripPattern.aimedEndTime }}</h3>
+          <h3>Varighet: {{ tripPattern.tripDuration }} minutter</h3>
+        </div>
+
+        <div v-for="(leg, legIndex) in tripPattern.legs" :key="legIndex" class="leg-item">
+
+          <div v-if="tripPattern.legs.length > 1">
+            <h3>Tur {{ legIndex + 1 }}</h3>
           </div>
 
-          <div v-else>
-            <h3>Transporttype: {{ trip.transportMode }}</h3>
-            <p><strong>Fra: </strong> {{ trip.startStop }}</p>
-            <p><strong>Til: </strong> {{ trip.endStop }}</p>
-            <p><strong>Transportlinje: </strong> {{ trip.routeName }}</p>
-            <p><strong>Transportkode: </strong> {{ trip.publicCode }}</p>
-            <p><strong>Operatør: </strong> {{ trip.authorityName }}</p>
-            <p><strong>Start tid: </strong> {{ trip.startTime }}</p>
-            <p><strong>Slutt tid: </strong> {{ trip.endTime }}</p>
-            <p><strong>Varighet: </strong> {{ trip.legDuration }} minutter</p>
+          <div v-if="leg.transportMode !== 'foot'">
+            <h3>Linje: {{ leg.publicCode }} - {{ leg.routeName }}</h3>
+            <p><strong>Fra: </strong> {{ leg.startStop }}</p>
+            <p><strong>Til: </strong> {{ leg.endStop }}</p>
+            <p><strong>Start tid: </strong> {{ leg.legStartTime }}</p>
+            <p><strong>Slutt tid: </strong> {{ leg.legEndTime }}</p>
+            <p><strong>Operatør: </strong> {{ leg.authorityName }}</p>
+            <p><strong>Transporttype: </strong>{{ leg.transportMode }}</p>
           </div>
+
+          <div v-else-if="leg.transportMode === 'foot'">
+            <h3>Gå på fot</h3>
+            <p><strong>Fra: </strong> {{ leg.startStop }}</p>
+            <p><strong>Til: </strong> {{ leg.endStop }}</p>
+            <p><strong>Start tid: </strong> {{ leg.legStartTime }}</p>
+            <p><strong>Slutt tid: </strong> {{ leg.legEndTime }}</p>
+            <p><strong>Avstand: </strong> {{ leg.distance }} meter</p>
+          </div>
+        </div>
       </article>
     </div>
     <div v-else>
