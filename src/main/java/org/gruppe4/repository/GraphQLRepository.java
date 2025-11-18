@@ -15,29 +15,29 @@ public class GraphQLRepository {
         this.client = new GraphQLClient();
     }
 
-    public QueryObject createQueryObject(int toStopIdInt, int fromStopIdInt, Integer viaStopIdInt,
+    public QueryObject createQueryObject(int fromStopIdInt, int toStopIdInt, Integer viaStopIdInt,
                                          OffsetDateTime offsetDateTime, ArrayList<String> transportModes) {
 
         // Lager Query objekter med toStop og fromStop + andre parametere dersom brukeren har satt inn mer info
         QueryObject queryObject;
         if (viaStopIdInt == null) {
             if (transportModes.isEmpty()) {
-                queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime);
+                queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime);
             } else {
                 if (transportModes.size() > 1) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes.getFirst());
                 }
             }
         } else {
             if (transportModes.isEmpty()) {
-                queryObject = new QueryObject(toStopIdInt, fromStopIdInt, viaStopIdInt, offsetDateTime);
+                queryObject = new QueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime);
             } else {
                 if (transportModes.size() > 1) {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes);
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes);
                 } else {
-                    queryObject = new QueryObject(toStopIdInt, fromStopIdInt, offsetDateTime, transportModes.getFirst());
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes.getFirst());
                 }
             }
         }
@@ -67,36 +67,51 @@ public class GraphQLRepository {
 
 
     public ArrayList<Map<String, Object>> formatTripPatterns(Trip response) {
-        ArrayList<Map<String, Object>> formattedTrips = new ArrayList<>();
+        ArrayList<Map<String, Object>> formattedTripPatterns = new ArrayList<>();
 
-        // Henter ut all reiseinfo fra hver rute og lagrer i eget hashmap
+        // Itererer over hver rute i responsen
         for (TripPattern tripPattern : response.tripPatterns) {
+            Map<String, Object> tripPatternData = new HashMap<>();
+            ArrayList<Map<String, Object>> legsData = new ArrayList<>();
 
+            // Henter informasjon som er spesifikk for tripPattern
+            tripPatternData.put("aimedStartTime", tripPattern.aimedStartTime.substring(11, 19));
+            tripPatternData.put("aimedEndTime", tripPattern.aimedEndTime.substring(11, 19));
+            tripPatternData.put("expectedStartTime", tripPattern.expectedStartTime.substring(11, 19));
+            tripPatternData.put("expectedEndTime", tripPattern.expectedEndTime.substring(11, 19));
+            tripPatternData.put("tripDuration", tripPattern.duration / 60);
+
+            // Itererer over hvert leg i reisen og samler dem for tripPattern
             for (Leg leg : tripPattern.legs) {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> legData = new HashMap<>();
 
+                // Legger til relevant rute info
                 if (leg.line != null) {
-                    data.put("routeName", leg.line.name);
-                    data.put("authorityName", leg.line.authority.name);
-                    data.put("publicCode", leg.line.publicCode);
+                    legData.put("routeName", leg.line.name);
+                    legData.put("authorityName", leg.line.authority.name);
+                    legData.put("publicCode", leg.line.publicCode);
                 }
 
-                data.put("transportMode", leg.mode);
-                data.put("duration", tripPattern.duration / 60);
-                data.put("startStop", leg.fromPlace.name);
-                data.put("endStop", leg.toPlace.name);
-                data.put("startTime", tripPattern.aimedStartTime.substring(11, 19));
-                data.put("endTime", tripPattern.aimedEndTime.substring(11, 19));
-                data.put("legStartTime", leg.aimedStartTime.substring(11, 19));
-                data.put("legEndTime", leg.aimedEndTime.substring(11, 19));
-                data.put("legDuration", leg.duration / 60);
-                data.put("legSize", tripPattern.legs.size());
+                // Legger til generell leg-informasjon (transportmode, stops, times)
+                legData.put("transportMode", leg.mode);
+                legData.put("startStop", leg.fromPlace.name);
+                legData.put("endStop", leg.toPlace.name);
+                legData.put("legStartTime", leg.aimedStartTime.substring(11, 19));
+                legData.put("legEndTime", leg.aimedEndTime.substring(11, 19));
+                legData.put("legDuration", leg.duration / 60);
+                legData.put("distance", String.format("%.0f", leg.distance));
 
-                // Legger hashmap-en i eget indeks i ArrayList-en
-                formattedTrips.add(data);
+                // Legger leg-data til listen av leg-data
+                legsData.add(legData);
             }
-            System.out.println(Arrays.toString(tripPattern.legs.toArray()));
+
+            // Legger til legs i tripPattern-dataen
+            tripPatternData.put("legs", legsData);
+
+            // Legger det formatterte tripPatternet med alle sine legs i resultat-listen
+            formattedTripPatterns.add(tripPatternData);
         }
-        return formattedTrips;
+
+        return formattedTripPatterns;
     }
 }
