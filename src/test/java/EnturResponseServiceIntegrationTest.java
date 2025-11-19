@@ -30,7 +30,8 @@ public class EnturResponseServiceIntegrationTest {
         EnturResponseService service = new EnturResponseService();
         int fromStopId = 60053; // Halden
         int toStopId = 58794;   // Fredrikstad
-        OffsetDateTime dateTime = OffsetDateTime.now();
+        // Rediger dato og klokkeslett hvis du ikke får resultater
+        OffsetDateTime dateTime = OffsetDateTime.parse("2025-11-20T08:30:00+01:00");
 
         QueryObject queryObject = new QueryObject(fromStopId, toStopId, dateTime);
         GraphQLQuery graphQLQuery = new GraphQLQuery(queryObject);
