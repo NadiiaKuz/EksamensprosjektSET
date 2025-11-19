@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import graphql.dto.EnturResponse;
+import org.gruppe4.graphql.dto.EnturResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

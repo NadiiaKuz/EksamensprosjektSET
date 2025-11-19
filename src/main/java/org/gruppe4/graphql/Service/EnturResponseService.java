@@ -1,8 +1,8 @@
-package graphql.Service;
+package org.gruppe4.graphql.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import graphql.dto.EnturResponse;
+import org.gruppe4.graphql.dto.EnturResponse;
 
 public class EnturResponseService {
     private final Gson gson;

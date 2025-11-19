@@ -1,4 +1,4 @@
-package graphql.query;
+package org.gruppe4.graphql.query;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
