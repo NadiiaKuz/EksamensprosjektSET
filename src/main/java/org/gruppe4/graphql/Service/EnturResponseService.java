@@ -1,22 +1,13 @@
-package graphql.Service;
-
+package org.gruppe4.graphql.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import graphql.client.GraphQLClient;
-import graphql.dto.EnturResponse;
-import graphql.query.GraphQLQuery;
-import graphql.query.QueryObject;
+import org.gruppe4.graphql.dto.EnturResponse;
 
 public class EnturResponseService {
-
-    private final GraphQLClient client;
-    private final GraphQLQuery queryBuilder;
     private final Gson gson;
 
     public EnturResponseService() {
-        this.client = new GraphQLClient();
-        this.queryBuilder = new GraphQLQuery(null);
         this.gson = new Gson();
     }
 
@@ -33,17 +24,8 @@ public class EnturResponseService {
     }
 
 
-    public EnturResponse getEnturResponse(int fromStopId, int toStopId) {
+    public EnturResponse getEnturResponse(String jsonResponse) {
         try {
-            // opprett QueryObject basert på parameterne
-            QueryObject queryObject = new QueryObject(fromStopId, toStopId);
-
-            // la GraphQLQuery automatisk finne riktig forespørsel
-            String body = queryBuilder.getQueryBasedOnProvidedParameters(queryObject);
-
-            // send forespørsel til Entur API
-            String jsonResponse = client.sendGraphQLRequest(body);
-
             // fjern eventuelt “Response:”-prefix
             String json = removeResponsePrefix(jsonResponse);
 

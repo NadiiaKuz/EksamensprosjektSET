@@ -1,84 +1,108 @@
 package org.gruppe4.controllers;
 
-import com.sun.jdi.connect.Transport;
-import graphql.query.GraphQLQuery;
-import graphql.query.QueryObject;
+import org.gruppe4.graphql.dto.Trip;
+import org.gruppe4.graphql.query.QueryObject;
 import io.javalin.http.Context;
+import org.gruppe4.enums.TransportType;
 import org.gruppe4.repository.GraphQLRepository;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GraphQLController {
     private final GraphQLRepository graphQLRepository;
 
-    public GraphQLController(GraphQLRepository graphQLRepository) {
-        this.graphQLRepository = graphQLRepository;
+    public GraphQLController(GraphQLRepository repository) {
+        this.graphQLRepository = repository;
     }
 
-    public void getTransportRoutes(Context context) {
-        String fromStopId = context.formParam("fromStopId");
-        String toStopId = context.formParam("toStopId");
+    public void getTransportRoutes(Context context) throws Exception {
+        String body = context.body();
 
-        String viaStopId = context.formParam("viaStopId");
+        // Parse JSON kropp
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        Map<String, Object> jsonMap = gson.fromJson(body, type);
 
-        // input=date og input=time. Vurderer input=datetime istedenfor, men det kommer senere
-        String dateString = context.formParam("date");
-        String timeString = context.formParam("time");
+        // Hent ut parameterne
+        String fromStopId = (String) jsonMap.get("start");
+        String toStopId = (String) jsonMap.get("end");
+        ArrayList<String> transportModes = (ArrayList<String>) jsonMap.get("transportType");
+        String viaStopId = context.formParam("viaStop");
+        String dateTimeString = (String) jsonMap.get("datetime");
 
-        // prøver med kun 1 transportMode for nå
-        String transportMode = context.formParam("transportMode");
+        // initialiserer variabler for Integer.parse()
+        int fromStopIdInt = 0;
+        int toStopIdInt = 0;
+        Integer viaStopIdInt = 0;
 
-        if (fromStopId.isEmpty() || toStopId.isEmpty()) {
-            context.result("Please enter a valid stop ID");
-        } else {
-            int fromStopIdInt = Integer.parseInt(fromStopId);
-            int toStopIdInt = Integer.parseInt(toStopId);
-            Integer viaStopIdInt = null;
+        ArrayList<String> formattedTransportModes = new ArrayList<>();
 
-            if (!viaStopId.isEmpty()) {
-                viaStopIdInt = Integer.parseInt(viaStopId);
-            }
-
-            LocalDate date;
-            LocalTime time;
-
-            // formatene brukes til LocalDate's parse metode
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalDateTime dateTime;
-
-            // LocalDateTime skal parses til OffsetDateTime, Entur bruker dette tidsformatet
-            OffsetDateTime offsetDateTime = null;
-
-            // dersom bruker har valgt f.eks kun tid, så formateres det med nåværende dato
-            if (!dateString.isEmpty() || !timeString.isEmpty()) {
-                if (dateString.isEmpty()) {
-                    date = LocalDate.now();
-                } else {
-                    date = LocalDate.parse(dateString, timeFormatter);
+        if (transportModes != null && !transportModes.isEmpty()) {
+            for ( int i = 0; i < transportModes.size(); i++ ) {
+                String mode = transportModes.get(i);
+                try {
+                    // Enum conversion and processing
+                    String transport = TransportType.valueOf(mode).getMode();
+                    formattedTransportModes.add(i, transport);
+                } catch (IllegalArgumentException e) {
+                    // Produser og logg feilmelding hvis typen er ukjent/genererer en feil
+                    System.err.println("Ukjent transport type: " + mode);
                 }
-
-                if (timeString.isEmpty()) {
-                    time = LocalTime.now();
-                } else {
-                    time = LocalTime.parse(timeString, dateFormatter);
-                }
-
-                dateTime = LocalDateTime.of(date, time);
-                offsetDateTime = OffsetDateTime.of(dateTime, ZoneOffset.ofHours(1));
             }
+        }
 
-            QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, transportMode);
-            String response = graphQLRepository.getTransportRoutes(query);
+        try {
+            // sjekker at fromStopId og toStopId ikke er tomme
+            if ((fromStopId != null && !fromStopId.isEmpty()) && (toStopId != null && !toStopId.isEmpty())) {
+                fromStopIdInt = Integer.parseInt(fromStopId);
+                toStopIdInt = Integer.parseInt(toStopId);
+                viaStopIdInt = null;
+
+                if (viaStopId != null)
+                    viaStopIdInt = Integer.parseInt(viaStopId);
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Ukjent stopp!");
+            System.err.println("fromStop: " + fromStopId);
+            System.err.println("toStop: " + toStopId);
+            return;
+        }
+
+        LocalDateTime dateTime;
+
+        // LocalDateTime skal parses til OffsetDateTime, Entur bruker dette tidsformatet
+        OffsetDateTime offsetDateTime = null;
+
+        if (dateTimeString != null) {
+            if (dateTimeString.isEmpty()) {
+                dateTime = LocalDateTime.now();
+            } else {
+                dateTime = LocalDateTime.parse(dateTimeString);
+            }
+            offsetDateTime = OffsetDateTime.of(dateTime, ZoneOffset.ofHours(1));
+        }
+
+        QueryObject query = graphQLRepository.createQueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, formattedTransportModes);
+
+        Trip response = graphQLRepository.getTransportRoutes(query);
+
+        try {
+            if (response != null) {
+                ArrayList<Map<String, Object>> tripDetails = graphQLRepository.formatTripPatterns(response);
+                context.json(tripDetails);
+            }
+        } catch (Exception e) {
+            System.err.println("No trips found");
         }
     }
 
-    /* lages når deserialisering er på plass
+    /* for videre arbeid
     public void checkForDelayedTransports(Context context) {
-
-    }
-*/
-
+    }*/
 }

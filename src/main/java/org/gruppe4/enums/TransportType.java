@@ -5,7 +5,8 @@ public enum TransportType {
     RAIL("rail"),
     METRO("metro"),
     TRAM("tram"),
-    COACH("coach");
+    COACH("coach"),
+    FERRY("ferry");
 
     private final String type;
 

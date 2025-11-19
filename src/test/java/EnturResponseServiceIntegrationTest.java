@@ -1,9 +1,14 @@
-import graphql.Service.EnturResponseService;
-import graphql.dto.EnturResponse;
-import graphql.dto.TripPattern;
+import org.gruppe4.graphql.Service.EnturResponseService;
+import org.gruppe4.graphql.client.GraphQLClient;
+import org.gruppe4.graphql.dto.EnturResponse;
+import org.gruppe4.graphql.dto.TripPattern;
+import org.gruppe4.graphql.query.GraphQLQuery;
+import org.gruppe4.graphql.query.QueryObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.OffsetDateTime;
 
 
 /**
@@ -19,15 +24,24 @@ public class EnturResponseServiceIntegrationTest {
 
     @Test
     @DisplayName("Integrasjonstest – importing actual Entur-response and deserializing correctly")
-    public void testGetEnturResponseFromEnturAPI() {
+    public void testGetEnturResponseFromEnturAPI() throws Exception {
 
         // Arrange
         EnturResponseService service = new EnturResponseService();
         int fromStopId = 60053; // Halden
         int toStopId = 58794;   // Fredrikstad
+        OffsetDateTime dateTime = OffsetDateTime.now();
+
+        QueryObject queryObject = new QueryObject(fromStopId, toStopId, dateTime);
+        GraphQLQuery graphQLQuery = new GraphQLQuery(queryObject);
+        String body = graphQLQuery.getQueryBasedOnProvidedParameters(queryObject);
+
+        GraphQLClient client = new GraphQLClient();
+        String jsonResponse = client.sendGraphQLRequest(body);
+
 
         // Act
-        EnturResponse response = service.getEnturResponse(fromStopId, toStopId);
+        EnturResponse response = service.getEnturResponse(jsonResponse);
 
         // Assert
         Assertions.assertNotNull(response, "Response from Entur is null");

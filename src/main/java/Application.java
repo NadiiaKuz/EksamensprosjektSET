@@ -2,9 +2,11 @@ import io.javalin.Javalin;
 import io.javalin.vue.VueComponent;
 
 import io.javalin.http.staticfiles.Location;
+import org.gruppe4.controllers.GraphQLController;
 import org.gruppe4.controllers.UsersController;
 import org.gruppe4.database.MySQLDatabase;
 import org.gruppe4.database.MySQLDatabaseException;
+import org.gruppe4.repository.GraphQLRepository;
 import org.gruppe4.repository.UsersRepository;
 import org.gruppe4.services.UsersService;
 
@@ -21,6 +23,10 @@ public class Application {
             javalinConfig.staticFiles.add("/static", Location.CLASSPATH); //For å kunne hente ressurser fra static
             javalinConfig.vue.vueInstanceNameInJs = "app";
         }).start();
+
+        // Setter opp controller
+        GraphQLRepository graphQLRepository = new GraphQLRepository();
+        GraphQLController graphQLController = new GraphQLController(graphQLRepository);
 
         // Laster inn innstillinger fra dbConfig.properties fil
         Properties properties = new Properties();
@@ -60,5 +66,8 @@ public class Application {
 
         app.get("/", new VueComponent("search-page"));
         app.get("/create-user", new VueComponent("create-user"));
+
+        // metode for søk av ruter (bruker 'method reference')
+        app.post("/api/search", graphQLController::getTransportRoutes);
     }
 }

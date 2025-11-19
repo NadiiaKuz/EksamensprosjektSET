@@ -1,4 +1,4 @@
-package graphql.client;
+package org.gruppe4.graphql.client;
 
 import java.net.URI;
 import java.net.http.HttpClient;
