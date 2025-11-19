@@ -1,9 +1,9 @@
-import graphql.Service.EnturResponseService;
-import graphql.client.GraphQLClient;
-import graphql.dto.EnturResponse;
-import graphql.dto.TripPattern;
-import graphql.query.GraphQLQuery;
-import graphql.query.QueryObject;
+import org.gruppe4.graphql.Service.EnturResponseService;
+import org.gruppe4.graphql.client.GraphQLClient;
+import org.gruppe4.graphql.dto.EnturResponse;
+import org.gruppe4.graphql.dto.TripPattern;
+import org.gruppe4.graphql.query.GraphQLQuery;
+import org.gruppe4.graphql.query.QueryObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
