@@ -74,7 +74,7 @@
           </div>
 
           <div v-else-if="leg.transportMode === 'foot'">
-            <h3>Gå på fot</h3>
+            <h3>Gå til fots</h3>
             <p><strong>Fra: </strong> {{ leg.startStop }}</p>
             <p><strong>Til: </strong> {{ leg.endStop }}</p>
             <p><strong>Start tid: </strong> {{ leg.legStartTime }}</p>

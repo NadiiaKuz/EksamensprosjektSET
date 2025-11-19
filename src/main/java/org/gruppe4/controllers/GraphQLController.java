@@ -1,7 +1,7 @@
 package org.gruppe4.controllers;
 
-import graphql.dto.*;
-import graphql.query.QueryObject;
+import org.gruppe4.graphql.dto.Trip;
+import org.gruppe4.graphql.query.QueryObject;
 import io.javalin.http.Context;
 import org.gruppe4.enums.TransportType;
 import org.gruppe4.repository.GraphQLRepository;
@@ -12,7 +12,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class GraphQLController {
