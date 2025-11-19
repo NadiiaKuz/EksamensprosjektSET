@@ -7,6 +7,8 @@ import org.gruppe4.enums.UserType;
 import org.gruppe4.model.User;
 import org.gruppe4.services.UsersService;
 
+// Controller bruker UserService som implementerer CRUD-operasjoner
+
 public class UsersController {
 
     private UsersService userService;
@@ -37,16 +39,16 @@ public class UsersController {
         String email = context.formParam("mail");
         String password = context.formParam("password");
         UserType userType = UserType.valueOf(context.formParam("userType"));
-        // By default alle brukere er USER
+        // By default alle brukere fra create-user.vue er USER
         Role role = Role.USER;
 
         User newUser = new User(firstName, lastName, email, password, userType, role);
 
         try{
             userService.createUser(newUser);
-            context.redirect("/api/users/" + email);
+            context.redirect("/create-user?created=true");
         } catch (Exception e) {
-            context.result("Error" + e.getMessage());
+            context.result("Error: " + e.getMessage());
         }
     }
 }
