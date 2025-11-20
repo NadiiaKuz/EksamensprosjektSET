@@ -1,4 +1,3 @@
-import org.gruppe4.graphql.client.GraphQLClient;
 import org.gruppe4.graphql.query.GraphQLQuery;
 import org.gruppe4.graphql.query.QueryObject;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +15,7 @@ public class GraphQLQueryUnitTest {
 
         // Arrange
         OffsetDateTime dateTime = OffsetDateTime.now();
-        QueryObject queryObject = new QueryObject(60053, 58794, dateTime); // Halden → Fredrikstad
+        QueryObject queryObject = new QueryObject(60053, 58794, dateTime); // Halden stasjon → Fredrikstad stasjon
         GraphQLQuery query = new GraphQLQuery(queryObject);
 
         // Act
@@ -29,27 +28,28 @@ public class GraphQLQueryUnitTest {
     }
 
     @Test
-    @DisplayName("Builds query with date and transportypes")
-    public void testQueryWithDateTimeAndTransportModes() throws Exception {
+    @DisplayName("Builds query with date and several transport modes")
+    public void testBuildQueryWithDateTimeAndTransportModes() throws Exception {
 
+        // Arrange
         OffsetDateTime dateTime = OffsetDateTime.now();
         ArrayList<String> modes = new ArrayList<>();
         modes.add("bus");
         modes.add("rail");
         String mode = "Bus";
-
         QueryObject queryObject = new QueryObject(60053, 58794, dateTime, modes);
         GraphQLQuery query = new GraphQLQuery(queryObject);
 
+        // Act
         String builtQuery = query.getQueryBasedOnProvidedParameters(queryObject);
 
-        Assertions.assertTrue(builtQuery.contains("bus"));
-        //Assertions.assertTrue(builtQuery.contains("rail"));
-        //Assertions.assertTrue(builtQuery.contains("dateTime"));
+        Assertions.assertTrue(builtQuery.contains("bus"), "Query should contain 'bus'");
+        Assertions.assertTrue(builtQuery.contains("rail"), "Query should contain 'rail'");
+        Assertions.assertTrue(builtQuery.contains("dateTime"), "Query should contain 'dateTime'");
+        Assertions.assertTrue(builtQuery.contains("mode"), "Query should contain 'mode'");
+        Assertions.assertTrue(builtQuery.contains("60053"), "Query should contain fromStop");
+        Assertions.assertTrue(builtQuery.contains("58794"), "Query should contain toStop");
+        Assertions.assertTrue(builtQuery.contains("dateTime"), "Query should contain 'dateTime'" );
         System.out.println(builtQuery);
-
-        GraphQLClient client = new GraphQLClient();
-
-        System.out.println(client.sendGraphQLRequest(builtQuery));
     }
 }

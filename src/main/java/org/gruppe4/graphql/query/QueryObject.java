@@ -7,9 +7,9 @@ public class QueryObject {
     private int fromStop;
     private int toStop;
     private Integer viaStop = null;
-    private OffsetDateTime dateTime;
+    public OffsetDateTime dateTime;
     private String transportMode;
-    public ArrayList<String> transportModes;
+    private ArrayList<String> transportModes;
 
     public QueryObject(int fromStop, int toStop) {
         this.fromStop = fromStop;
