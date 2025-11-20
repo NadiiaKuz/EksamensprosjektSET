@@ -2,14 +2,29 @@
   <h1>Hvor ønsker du å reise?</h1>
   <form @submit.prevent="handleSubmit">
     <label for="start" id="startLabel">Fra:
-      <input type="text" id="start" name="start" placeholder="Hvor ønsker du å reise fra?" required>
+      <input type="text" id="start" name="start" placeholder="Hvor ønsker du å reise fra?" list="stations" required>
     </label>
     <label for="end" id="endLabel">Til:
-      <input type="text" id="end" name="end" placeholder="Hvor ønsker du å reise til?" required>
+      <input type="text" id="end" name="end" placeholder="Hvor ønsker du å reise til?" list="stations" required>
     </label>
     <label for="datetime" id="datetimeLabel">Tid:
       <input type="datetime-local" id="datetime" name="datetime">
     </label>
+
+    <!-- STATION SUGGESTIONS -->
+    <datalist id="stations">
+      <option value="2306 Fredrikstad bussterminal"></option>
+      <option value="58794 Fredrikstad stasjon"></option>
+      <option value="2562 Halden bussterminal"></option>
+      <option value="60053 Halden stasjon"></option>
+      <option value="2534 Remmen"></option>
+      <option value="58799 Rygge stasjon"></option>
+      <option value="2900 Moss bussterminal"></option>
+      <option value="58796 Moss stasjon"></option>
+      <option value="59872 Oslo S"></option>
+      <option value="58293 Oslo bussterminal"></option>
+      <option value="59983 Bergen stasjon"></option>
+    </datalist>
 
     <!--HAMBURGER-->
     <section id="filtering">
@@ -89,22 +104,34 @@
     </div>
   </section>
 </template>
+
 <link rel="stylesheet" href="/css/global-style.css">
 <link rel="stylesheet" href="/css/search-page.css">
 
 <script>
 app.component("search-page", {
+  template: "#search-page-template",
   data() {
     return {
       results: [],
       error: null
     };
   },
-  template: "#search-page-template",
   methods: {
+    // Endre "2306 Fredrikstad bussterminal" til "2306"
+    extractId(value) {
+      if (!value) return "";
+      return value.split(" ")[0];
+    },
+
     handleSubmit() {
-      const startStop = document.querySelector("#start").value;
-      const endStop = document.querySelector("#end").value;
+      const startInput = document.querySelector("#start").value;
+      const endInput = document.querySelector("#end").value;
+
+      // Hent ut den numeriske identifikatoren fra "2306 Fredrikstad bussterminal"
+      const startStop = this.extractId(startInput);
+      const endStop = this.extractId(endInput);
+
       const transportTypes = Array.from(document.querySelectorAll("input[name='transportType']:checked"))
           .map(input => input.value);
       const dateTime = document.querySelector("#datetime").value;
