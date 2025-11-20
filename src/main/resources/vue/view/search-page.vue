@@ -104,18 +104,19 @@
     </div>
   </section>
 </template>
+
 <link rel="stylesheet" href="/css/global-style.css">
 <link rel="stylesheet" href="/css/search-page.css">
 
 <script>
 app.component("search-page", {
+  template: "#search-page-template",
   data() {
     return {
       results: [],
       error: null
     };
   },
-  template: "#search-page-template",
   methods: {
     // Endre "2306 Fredrikstad bussterminal" til "2306"
     extractId(value) {
