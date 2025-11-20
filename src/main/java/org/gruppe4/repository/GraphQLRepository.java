@@ -39,9 +39,9 @@ public class GraphQLRepository {
                 queryObject = new QueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime);
             } else {
                 if (transportModes.size() > 1) {
-                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes);
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, transportModes);
                 } else {
-                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, offsetDateTime, transportModes.getFirst());
+                    queryObject = new QueryObject(fromStopIdInt, toStopIdInt, viaStopIdInt, offsetDateTime, transportModes.getFirst());
                 }
             }
         }
